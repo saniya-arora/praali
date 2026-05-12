@@ -55,10 +55,25 @@
       gap: 24px;
     }
 
-    .nav-left { justify-self: start; }
     .nav-right { justify-self: end; }
-    .brand { justify-self: center; display: inline-flex; align-items: center; text-decoration: none; }
-    .brand img { height: 56px; width: auto; display: block; }
+
+    .brand-mark {
+      justify-self: start;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .brand-mark img { height: 48px; width: auto; display: block; }
+
+    .brand-wordmark {
+      justify-self: center;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", "Times New Roman", serif;
+      font-size: 30px;
+      letter-spacing: 0.32em;
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 400;
+    }
 
     .nav { display: flex; gap: 28px; }
     .nav a {
@@ -85,8 +100,8 @@
 
     .hero-banner {
       display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
-      background: var(--ink);
+      grid-template-columns: 1fr;
+      background: var(--bg);
       overflow: hidden;
       width: 100%;
     }
@@ -100,6 +115,127 @@
 
     .hero-images--single {
       grid-template-columns: 1fr;
+    }
+
+    .hero-carousel {
+      display: block;
+      position: relative;
+      height: auto;
+      aspect-ratio: 2 / 1;
+      max-height: 760px;
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+    }
+    .hero-slide.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .hero-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .hero-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: var(--ink);
+      color: var(--bg);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      box-shadow: 0 2px 6px rgba(0, 44, 57, 0.25);
+      transition: background 0.15s ease;
+    }
+    .hero-arrow:hover { background: var(--sage-deep); }
+    .hero-arrow-prev { left: 14px; }
+    .hero-arrow-next { right: 14px; }
+
+    .hero-dots {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 3;
+    }
+    .hero-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(0, 44, 57, 0.35);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.15s ease;
+    }
+    .hero-dot.is-active { background: var(--ink); }
+
+    .hero-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      text-align: center;
+    }
+
+    .hero-headline {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 34px;
+      color: var(--ink);
+      letter-spacing: 0.03em;
+      margin: 0;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .hero-cta {
+      background: var(--ink);
+      color: var(--highlight);
+      padding: 16px 40px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      box-shadow: 0 6px 20px rgba(0, 44, 57, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .hero-cta:hover {
+      background: var(--highlight);
+      color: var(--ink);
+    }
+
+    @media (max-width: 600px) {
+      .hero-headline { font-size: 22px; }
+      .hero-cta { padding: 12px 28px; font-size: 12px; }
     }
 
     .hero-img {
@@ -209,8 +345,8 @@
       height: 44px;
       border-radius: 50%;
       border: none;
-      background: rgba(255, 255, 255, 0.9);
-      color: var(--ink);
+      background: var(--ink);
+      color: var(--bg);
       font-size: 26px;
       line-height: 1;
       cursor: pointer;
@@ -219,19 +355,20 @@
       align-items: center;
       justify-content: center;
       padding: 0;
-      box-shadow: 0 2px 8px rgba(0, 44, 57, 0.18);
+      box-shadow: 0 2px 8px rgba(0, 44, 57, 0.28);
       transition: background 0.15s ease;
     }
-    .strip-arrow:hover { background: #fff; }
+    .strip-arrow:hover { background: var(--sage-deep); }
     .strip-arrow:disabled { opacity: 0.35; cursor: default; }
     .strip-arrow-prev { left: 16px; }
     .strip-arrow-next { right: 16px; }
 
-    .strip-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+    .strip-img--contain {
+      background: var(--bg);
+    }
+
+    .strip-img--contain img {
+      object-fit: contain;
     }
 
     .products { padding: 32px 0 64px; }
@@ -367,14 +504,18 @@
     .about-image {
       background: var(--placeholder);
       border-radius: var(--radius);
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 9 / 16;
+      max-height: 720px;
+      width: 100%;
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
     }
 
-    .about-image img {
+    .about-image img,
+    .about-image video {
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -450,8 +591,8 @@
       height: 40px;
       border-radius: 50%;
       border: none;
-      background: rgba(255, 255, 255, 0.85);
-      color: var(--ink);
+      background: var(--ink);
+      color: var(--bg);
       font-size: 24px;
       line-height: 1;
       cursor: pointer;
@@ -463,7 +604,7 @@
       padding: 0;
     }
 
-    .carousel-arrow:hover { background: #fff; }
+    .carousel-arrow:hover { background: var(--sage-deep); }
     .carousel-arrow-prev { left: 12px; }
     .carousel-arrow-next { right: 12px; }
     .carousel-arrow[hidden] { display: none; }
@@ -484,7 +625,42 @@
     .carousel-counter[hidden] { display: none; }
     .modal-details { padding: 40px 36px; }
     .modal-title { font-size: 26px; letter-spacing: 0.04em; margin-bottom: 6px; }
+    .modal-tagline {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .modal-tagline[hidden] { display: none; }
     .modal-price { font-size: 16px; color: var(--muted); margin-bottom: 24px; }
+
+    .modal-fit-note {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.6;
+      margin: 0 0 22px;
+    }
+    .modal-fit-note[hidden] { display: none; }
+
+    .modal-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 22px;
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    .modal-bullets[hidden] { display: none; }
+    .modal-bullets li {
+      padding: 4px 0 4px 20px;
+      position: relative;
+    }
+    .modal-bullets li::before {
+      content: "•";
+      position: absolute;
+      left: 6px;
+      color: var(--sage-deep);
+    }
 
     .modal-section { margin-bottom: 22px; }
     .modal-section h4 {
@@ -516,6 +692,50 @@
 
     .modal-actions { display: flex; gap: 8px; margin: 24px 0 28px; }
 
+    .size-chart-desc {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+
+    .size-chart-unit {
+      font-size: 12px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+
+    .size-chart-footer {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .size-chart-footer h5 {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .size-chart-footer p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .size-chart-footer a {
+      color: var(--ink);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .size-chart-footer a:hover {
+      color: var(--sage-deep);
+    }
+
     .size-chart { width: 100%; border-collapse: collapse; font-size: 13px; }
     .size-chart th, .size-chart td {
       text-align: left;
@@ -541,10 +761,7 @@
     @media (max-width: 900px) {
       .hero-banner {
         grid-template-columns: 1fr;
-        margin: 0 16px;
       }
-      .hero-images { height: 360px; }
-      .hero-pitch { padding: 32px 24px; }
       .photo-strip-wrap { --visible-count: 2; }
     }
 
@@ -575,34 +792,35 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <div class="nav nav-left" aria-hidden="true"></div>
-      <a href="#" class="brand" aria-label="Praali home">
+      <a href="#" class="brand-mark" aria-label="Praali home">
         <img src="assets/praali_logo.png" alt="Praali" />
       </a>
+      <a href="#" class="brand-wordmark">PRAALI</a>
       <nav class="nav nav-right">
         <a href="#" class="cart-link">Cart (0)</a>
       </nav>
     </div>
   </header>
 
-  <div class="announcement-bar">
-    <div class="container">
-      <span>PRE-ORDER BELOW</span>
-    </div>
-  </div>
-
   <main>
     <!-- HERO: single image + pitch block -->
     <section class="hero">
       <div class="hero-banner">
-        <div class="hero-images hero-images--single">
-          <div class="hero-img"><img src="assets/hero-main.jpg" alt="" /></div>
-        </div>
-        <div class="hero-pitch">
-          <img class="hero-pitch-logo" src="assets/praali_logo.png" alt="Praali" />
-          <p class="hero-pitch-headline">Introducing Praali</p>
-          <p class="hero-pitch-text">Yoga of centuries ago, with a modern twist. Made in India, for all bodies.</p>
-          <a href="#shop" class="btn-pitch">Shop Now</a>
+        <div class="hero-images hero-images--single hero-carousel">
+          <div class="hero-slide is-active"><img src="assets/hero-cayenne.jpg" alt="" /></div>
+          <div class="hero-slide"><img src="assets/hero-lilac.jpg" alt="" /></div>
+          <div class="hero-slide"><img src="assets/hero-sage.jpg" alt="" /></div>
+          <div class="hero-center">
+            <h2 class="hero-headline">Made where Yoga began</h2>
+            <a href="#shop" class="hero-cta">Pre-Order Now</a>
+          </div>
+          <button class="hero-arrow hero-arrow-prev" data-hero-prev aria-label="Previous">‹</button>
+          <button class="hero-arrow hero-arrow-next" data-hero-next aria-label="Next">›</button>
+          <div class="hero-dots">
+            <button class="hero-dot is-active" data-hero-dot="0" aria-label="Slide 1"></button>
+            <button class="hero-dot" data-hero-dot="1" aria-label="Slide 2"></button>
+            <button class="hero-dot" data-hero-dot="2" aria-label="Slide 3"></button>
+          </div>
         </div>
       </div>
     </section>
@@ -617,11 +835,11 @@
               <img src="assets/product1-1.jpg" alt="" />
             </button>
             <div class="color-swatches">
-              <button class="swatch is-active" data-color="0" style="background: #596C45;" aria-label="Olive"></button>
-              <button class="swatch" data-color="1" style="background: #EDE8E0;" aria-label="Cream"></button>
-              <button class="swatch" data-color="2" style="background: #002C39;" aria-label="Navy"></button>
+              <button class="swatch is-active" data-color="0" style="background: #9C3E32;" aria-label="Cayenne"></button>
+              <button class="swatch" data-color="1" style="background: #C4ADD4;" aria-label="Lilac"></button>
+              <button class="swatch" data-color="2" style="background: #A9B48B;" aria-label="Sage Green"></button>
             </div>
-            <h3 class="product-name">Product 1</h3>
+            <h3 class="product-name">The Allie Top</h3>
             <p class="product-price">$XX</p>
             <div class="card-section">
               <span class="card-section-label">Size</span>
@@ -639,11 +857,11 @@
               <span class="img-label">product 2 — color 1</span>
             </button>
             <div class="color-swatches">
-              <button class="swatch is-active" data-color="0" style="background: #FEE569;" aria-label="Yellow"></button>
-              <button class="swatch" data-color="1" style="background: #A9B48B;" aria-label="Sage"></button>
-              <button class="swatch" data-color="2" style="background: #9E2949;" aria-label="Berry"></button>
+              <button class="swatch is-active" data-color="0" style="background: #9C3E32;" aria-label="Cayenne"></button>
+              <button class="swatch" data-color="1" style="background: #C4ADD4;" aria-label="Lilac"></button>
+              <button class="swatch" data-color="2" style="background: #A9B48B;" aria-label="Sage Green"></button>
             </div>
-            <h3 class="product-name">Product 2</h3>
+            <h3 class="product-name">The Allie Capri Pants</h3>
             <p class="product-price">$XX</p>
             <div class="card-section">
               <span class="card-section-label">Size</span>
@@ -674,6 +892,11 @@
           <div class="modal-details">
             <h2 class="modal-title" id="modalTitle"></h2>
             <p class="modal-price" data-modal-price></p>
+            <p class="modal-tagline" data-modal-tagline hidden></p>
+
+            <ul class="modal-bullets" data-modal-bullets hidden></ul>
+
+            <p class="modal-fit-note" data-modal-fit-note hidden></p>
 
             <div class="modal-section">
               <h4>Color: <span data-modal-color-name></span></h4>
@@ -690,23 +913,17 @@
             </div>
 
             <div class="modal-section">
-              <h4>Composition</h4>
-              <p data-modal-composition></p>
-            </div>
-
-            <div class="modal-section">
               <h4>Size Chart</h4>
+              <p class="size-chart-desc">Fits true to size, with a little bit of stretch to accommodate for our everchanging bodies and lots of breath and movement.</p>
+              <p class="size-chart-unit">All measurements are in inches.</p>
               <table class="size-chart">
-                <thead>
-                  <tr><th>Size</th><th>Bust (in)</th><th>Waist (in)</th><th>Hip (in)</th></tr>
-                </thead>
+                <thead data-modal-size-thead></thead>
                 <tbody data-modal-size-chart></tbody>
               </table>
-            </div>
-
-            <div class="modal-section">
-              <h4>Quick Facts</h4>
-              <ul class="modal-facts" data-modal-facts></ul>
+              <div class="size-chart-footer">
+                <h5>Don't see your size yet?</h5>
+                <p>As a new brand, we're thoughtfully growing our size range and would love your input. If you'd like to see your size in future drops, leave your sizing details <a href="#">here</a>.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -743,7 +960,7 @@
           <p>From me and mine, to you and yours.</p>
         </div>
         <div class="about-image">
-          <img src="assets/mission.jpg" alt="" />
+          <video src="assets/mission.mov" autoplay muted loop playsinline></video>
         </div>
       </div>
     </section>
@@ -762,9 +979,10 @@
 
       const products = {
         '1': {
-          name: 'Product 1',
+          name: 'The Allie Top',
+          tagline: 'Finally, yoga clothing with embroidery and cute prints!',
           price: '$XX',
-          composition: '100% organic cotton, ethically dyed in small batches.',
+          fitNote: "I'm 5'2, wearing a medium. I have a shorter torso, lil tummy, and a DD chest.",
           images: [
             'assets/product1-1.jpg',
             'assets/product1-2.jpg',
@@ -775,47 +993,61 @@
             'assets/product1-7.jpg'
           ],
           colors: [
-            { name: 'Olive', hex: '#596C45' },
-            { name: 'Cream', hex: '#EDE8E0' },
-            { name: 'Navy',  hex: '#002C39' }
+            { name: 'Cayenne',    hex: '#9C3E32' },
+            { name: 'Lilac',      hex: '#C4ADD4' },
+            { name: 'Sage Green', hex: '#A9B48B' }
           ],
           sizes: ['XS', 'S', 'M', 'L', 'XL'],
-          sizeChart: [
-            { size: 'XS', bust: '32', waist: '24', hip: '34' },
-            { size: 'S',  bust: '34', waist: '26', hip: '36' },
-            { size: 'M',  bust: '36', waist: '28', hip: '38' },
-            { size: 'L',  bust: '38', waist: '30', hip: '40' },
-            { size: 'XL', bust: '40', waist: '32', hip: '42' }
+          sizeColumns: [
+            { label: 'Bust', key: 'bust' },
+            { label: 'Waist', key: 'waist' },
+            { label: 'Length', key: 'length' }
           ],
-          facts: [
-            'Made in India',
-            'Ethically produced in small batches',
-            'Hand-finished details',
-            'Machine wash cold, line dry'
+          sizeChart: [
+            { size: 'XS', bust: '30–32', waist: '24–26', length: '17' },
+            { size: 'S',  bust: '32–34', waist: '26–28', length: '17.25' },
+            { size: 'M',  bust: '34–36', waist: '28–30', length: '17.5' },
+            { size: 'L',  bust: '36–38', waist: '30–32', length: '17.75' },
+            { size: 'XL', bust: '38–40', waist: '32–34', length: '18' }
+          ],
+          bullets: [
+            'Built in sports bra',
+            '95% cotton 5% natural elastane',
+            'Washer and dryer friendly ofc',
+            'Made in India <3',
+            'Ethically made, everyone say thank you to my masterji Vikas ji!'
           ]
         },
         '2': {
-          name: 'Product 2',
+          name: 'The Allie Capri Pants',
+          tagline: 'Finally, yoga clothing with embroidery and cute prints!',
           price: '$XX',
-          composition: 'Organic cotton blend with hand-block printed accents.',
+          fitNote: "I'm 5'2, wearing a medium. I have a shorter torso, lil tummy, and a DD chest.",
           colors: [
-            { name: 'Yellow', hex: '#FEE569' },
-            { name: 'Sage',   hex: '#A9B48B' },
-            { name: 'Berry',  hex: '#9E2949' }
+            { name: 'Cayenne',    hex: '#9C3E32' },
+            { name: 'Lilac',      hex: '#C4ADD4' },
+            { name: 'Sage Green', hex: '#A9B48B' }
           ],
           sizes: ['XS', 'S', 'M', 'L', 'XL'],
-          sizeChart: [
-            { size: 'XS', bust: '32', waist: '24', hip: '34' },
-            { size: 'S',  bust: '34', waist: '26', hip: '36' },
-            { size: 'M',  bust: '36', waist: '28', hip: '38' },
-            { size: 'L',  bust: '38', waist: '30', hip: '40' },
-            { size: 'XL', bust: '40', waist: '32', hip: '42' }
+          sizeColumns: [
+            { label: 'Waist', key: 'waist' },
+            { label: 'Hip',   key: 'hip' },
+            { label: 'Length', key: 'length' }
           ],
-          facts: [
-            'Made in India',
-            'Inspired by traditional Indian silhouettes',
-            'Designed for movement and rest',
-            'Machine wash cold, line dry'
+          sizeChart: [
+            { size: 'XS', waist: '24–26', hip: '34–36', length: '27.25' },
+            { size: 'S',  waist: '26–28', hip: '36–38', length: '27.6' },
+            { size: 'M',  waist: '28–30', hip: '38–40', length: '28' },
+            { size: 'L',  waist: '30–32', hip: '40–42', length: '28.6' },
+            { size: 'XL', waist: '32–34', hip: '42–44', length: '29' }
+          ],
+          bullets: [
+            'Mid/low waist. Designed to be worn however feels most comfortable for you!',
+            'Slight flare at the bottom',
+            '95% cotton 5% natural elastane',
+            'Washer and dryer friendly ofc',
+            'Made in India <3',
+            'Ethically made, everyone say thank you to my masterji Vikas ji!'
           ]
         }
       };
@@ -858,7 +1090,6 @@
       const modal = document.getElementById('productModal');
       const modalTitle = modal.querySelector('[id="modalTitle"]');
       const modalPrice = modal.querySelector('[data-modal-price]');
-      const modalComposition = modal.querySelector('[data-modal-composition]');
       const modalImageLabel = modal.querySelector('[data-modal-image-label]');
       const modalImage = modal.querySelector('[data-modal-image]');
       const modalImageImg = modal.querySelector('[data-modal-image-img]');
@@ -869,7 +1100,10 @@
       const modalColorName = modal.querySelector('[data-modal-color-name]');
       const modalSizes = modal.querySelector('[data-modal-sizes]');
       const modalSizeChart = modal.querySelector('[data-modal-size-chart]');
-      const modalFacts = modal.querySelector('[data-modal-facts]');
+      const modalSizeThead = modal.querySelector('[data-modal-size-thead]');
+      const modalTagline = modal.querySelector('[data-modal-tagline]');
+      const modalFitNote = modal.querySelector('[data-modal-fit-note]');
+      const modalBullets = modal.querySelector('[data-modal-bullets]');
 
       let carouselIndex = 0;
       let carouselImages = [];
@@ -917,7 +1151,32 @@
 
         modalTitle.textContent = product.name;
         modalPrice.textContent = product.price;
-        modalComposition.textContent = product.composition;
+
+        if (product.tagline) {
+          modalTagline.textContent = product.tagline;
+          modalTagline.hidden = false;
+        } else {
+          modalTagline.hidden = true;
+        }
+
+        if (product.fitNote) {
+          modalFitNote.textContent = product.fitNote;
+          modalFitNote.hidden = false;
+        } else {
+          modalFitNote.hidden = true;
+        }
+
+        modalBullets.innerHTML = '';
+        if (product.bullets && product.bullets.length) {
+          product.bullets.forEach(b => {
+            const li = document.createElement('li');
+            li.textContent = b;
+            modalBullets.appendChild(li);
+          });
+          modalBullets.hidden = false;
+        } else {
+          modalBullets.hidden = true;
+        }
 
         if (product.images && product.images.length) {
           carouselImages = product.images;
@@ -959,18 +1218,17 @@
           modalSizes.appendChild(b);
         });
 
+        const sizeCols = product.sizeColumns || [
+          { label: 'Bust', key: 'bust' },
+          { label: 'Waist', key: 'waist' },
+          { label: 'Length', key: 'length' }
+        ];
+        modalSizeThead.innerHTML = `<tr><th>Size</th>${sizeCols.map(c => `<th>${c.label}</th>`).join('')}</tr>`;
         modalSizeChart.innerHTML = '';
         product.sizeChart.forEach(row => {
           const tr = document.createElement('tr');
-          tr.innerHTML = `<td>${row.size}</td><td>${row.bust}</td><td>${row.waist}</td><td>${row.hip}</td>`;
+          tr.innerHTML = `<td>${row.size}</td>${sizeCols.map(c => `<td>${row[c.key] || ''}</td>`).join('')}`;
           modalSizeChart.appendChild(tr);
-        });
-
-        modalFacts.innerHTML = '';
-        product.facts.forEach(f => {
-          const li = document.createElement('li');
-          li.textContent = f;
-          modalFacts.appendChild(li);
         });
 
         renderColor(product, 0);
@@ -999,6 +1257,37 @@
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modal.hidden) closeModal();
       });
+
+      /* HERO CAROUSEL */
+      const heroSlides = document.querySelectorAll('.hero-slide');
+      const heroDots = document.querySelectorAll('.hero-dot');
+      const heroPrev = document.querySelector('[data-hero-prev]');
+      const heroNext = document.querySelector('[data-hero-next]');
+      if (heroSlides.length) {
+        let heroIndex = 0;
+        let heroTimer;
+
+        function showHero(i) {
+          heroIndex = (i + heroSlides.length) % heroSlides.length;
+          heroSlides.forEach((s, idx) => s.classList.toggle('is-active', idx === heroIndex));
+          heroDots.forEach((d, idx) => d.classList.toggle('is-active', idx === heroIndex));
+        }
+
+        function startHeroAuto() {
+          stopHeroAuto();
+          heroTimer = setInterval(() => showHero(heroIndex + 1), 5000);
+        }
+        function stopHeroAuto() {
+          if (heroTimer) clearInterval(heroTimer);
+        }
+
+        heroPrev.addEventListener('click', () => { showHero(heroIndex - 1); startHeroAuto(); });
+        heroNext.addEventListener('click', () => { showHero(heroIndex + 1); startHeroAuto(); });
+        heroDots.forEach((d, idx) => {
+          d.addEventListener('click', () => { showHero(idx); startHeroAuto(); });
+        });
+        startHeroAuto();
+      }
 
       /* PHOTO STRIP CAROUSEL */
       const stripWrap = document.querySelector('.photo-strip-wrap');
