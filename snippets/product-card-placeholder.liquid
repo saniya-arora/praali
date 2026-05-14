@@ -1,0 +1,31 @@
+{%- comment -%}
+  Placeholder product card when no products exist yet in the store.
+  Expects: idx, name, price, image
+{%- endcomment -%}
+
+<article class="product-card" data-product="placeholder-{{ idx }}">
+  <button class="product-image" type="button" aria-label="{{ name }}">
+    <img src="{{ image | asset_url }}" alt="{{ name }}" />
+  </button>
+  <div class="color-swatches">
+    <button class="swatch" data-color="0" style="background: #9C3E32;" aria-label="Cayenne"></button>
+    <button class="swatch" data-color="1" style="background: #C4ADD4;" aria-label="Lilac"></button>
+    <button class="swatch is-active" data-color="2" style="background: #A9B48B;" aria-label="Sage Green"></button>
+  </div>
+  <h3 class="product-name">{{ name }}</h3>
+  <p class="product-price">{{ price }}</p>
+  <div class="card-section">
+    <span class="card-section-label">Size</span>
+    <div class="size-options">
+      <button class="size-option">XS</button>
+      <button class="size-option">S</button>
+      <button class="size-option">M</button>
+      <button class="size-option">L</button>
+      <button class="size-option">XL</button>
+    </div>
+  </div>
+  <div class="product-actions">
+    <button class="btn btn-primary" type="button">Buy Now</button>
+  </div>
+  <button class="details-link" type="button">View details</button>
+</article>

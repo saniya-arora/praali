@@ -1,0 +1,42 @@
+{% comment %}
+  Minimal product page — uses Shopify's standard structure with our brand styling.
+  For the prototype, we redirect users to the homepage modal flow by linking back home.
+{% endcomment %}
+
+<section class="products" style="padding: 120px 0 64px;">
+  <div class="container" style="max-width: 900px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px;">
+      <div>
+        {%- if product.featured_image -%}
+          <img src="{{ product.featured_image | image_url: width: 900 }}" alt="{{ product.title | escape }}" style="width: 100%; border-radius: var(--radius);" />
+        {%- endif -%}
+      </div>
+      <div>
+        <h2 class="modal-title">{{ product.title }}</h2>
+        <p class="modal-price">{{ product.price | money }}</p>
+        <div class="modal-tagline">{{ product.description }}</div>
+
+        {%- form 'product', product -%}
+          {%- if product.has_only_default_variant == false -%}
+            {%- for option in product.options_with_values -%}
+              <div class="modal-section">
+                <h4>{{ option.name }}</h4>
+                <select name="options[{{ option.name | escape }}]">
+                  {%- for value in option.values -%}
+                    <option value="{{ value | escape }}"{% if option.selected_value == value %} selected{% endif %}>{{ value }}</option>
+                  {%- endfor -%}
+                </select>
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" />
+          {%- endif -%}
+
+          <div class="modal-actions">
+            <button type="submit" class="btn btn-primary">Buy Now</button>
+          </div>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</section>

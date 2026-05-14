@@ -1,0 +1,32 @@
+<section class="products" style="padding: 120px 0 64px;">
+  <div class="container" style="max-width: 800px;">
+    <h2 class="modal-title">Your cart</h2>
+
+    {%- if cart.item_count == 0 -%}
+      <p class="modal-tagline">Your cart is empty.</p>
+      <a href="{{ routes.root_url }}" class="btn btn-primary" style="display: inline-block; padding: 14px 28px; text-align: center; margin-top: 16px;">Continue shopping</a>
+    {%- else -%}
+      <form action="{{ routes.cart_url }}" method="post" novalidate>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          {%- for item in cart.items -%}
+            <li style="display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line);">
+              {%- if item.image -%}
+                <img src="{{ item.image | image_url: width: 160 }}" alt="" style="width: 80px; height: auto; border-radius: 8px;" />
+              {%- endif -%}
+              <div style="flex: 1;">
+                <h4 style="margin: 0; color: var(--brand-green);">{{ item.product.title }}</h4>
+                <p style="margin: 4px 0; color: var(--brand-green);">{{ item.variant.title }}</p>
+                <p style="margin: 4px 0; color: var(--brand-green);">{{ item.final_line_price | money }}</p>
+                <a href="{{ item.url_to_remove }}" style="color: var(--brand-green-light); font-size: 12px;">Remove</a>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+        <div style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center;">
+          <p style="color: var(--brand-green); font-size: 18px;">Subtotal: {{ cart.total_price | money }}</p>
+          <button type="submit" name="checkout" class="btn btn-primary">Check out</button>
+        </div>
+      </form>
+    {%- endif -%}
+  </div>
+</section>

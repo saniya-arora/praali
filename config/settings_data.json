@@ -1,0 +1,16 @@
+{
+  "current": {
+    "color_bg": "#EDE8E0",
+    "color_brand_green": "#5C6B4B",
+    "color_brand_green_light": "#8AA572",
+    "color_highlight": "#FEE569"
+  },
+  "presets": {
+    "Default": {
+      "color_bg": "#EDE8E0",
+      "color_brand_green": "#5C6B4B",
+      "color_brand_green_light": "#8AA572",
+      "color_highlight": "#FEE569"
+    }
+  }
+}

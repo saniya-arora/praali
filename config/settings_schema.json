@@ -1,0 +1,18 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Praali",
+    "theme_version": "0.1.0",
+    "theme_author": "Praali",
+    "theme_documentation_url": "https://github.com/saniya-arora/praali"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "color", "id": "color_bg", "label": "Background (cream)", "default": "#EDE8E0" },
+      { "type": "color", "id": "color_brand_green", "label": "Brand green", "default": "#5C6B4B" },
+      { "type": "color", "id": "color_brand_green_light", "label": "Brand green (light)", "default": "#8AA572" },
+      { "type": "color", "id": "color_highlight", "label": "Highlight (yellow)", "default": "#FEE569" }
+    ]
+  }
+]

@@ -1,0 +1,1073 @@
+    :root {
+      --bg: #EDE8E0;
+      --ink: #002C39;
+      --muted: #596C45;
+      --line: #d8d2c5;
+      --accent: #002C39;
+      --accent-ink: #FEE569;
+      --highlight: #FEE569;
+      --sage: #A9B48B;
+      --sage-deep: #596C45;
+      --placeholder: #A9B48B;
+      --placeholder-ink: #002C39;
+      --radius: 14px;
+      --radius-lg: 22px;
+      --brand-green: #5C6B4B;
+      --brand-green-light: #8AA572;
+      --shadow: 0 2px 12px rgba(0, 44, 57, 0.06);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", "Times New Roman", serif;
+      font-weight: 500;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(237, 232, 224, 0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .header-inner {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 10px 24px;
+      gap: 24px;
+      max-width: none;
+    }
+
+    .nav-right { justify-self: end; }
+
+    .brand-mark {
+      justify-self: start;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .brand-mark img { height: 28px; width: auto; display: block; }
+
+    .brand-wordmark {
+      justify-self: center;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", "Times New Roman", serif;
+      font-size: 22px;
+      letter-spacing: 0.45em;
+      color: #5C6B4B;
+      text-decoration: none;
+      font-weight: 500;
+      padding-left: 0.45em;
+    }
+
+    .site-header .nav a,
+    .site-header .cart-link {
+      color: #5C6B4B;
+      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.18em;
+    }
+
+    .brand-mark img {
+      filter: brightness(0) saturate(100%) invert(38%) sepia(13%) saturate(672%) hue-rotate(45deg) brightness(96%) contrast(89%);
+    }
+
+    .nav { display: flex; gap: 28px; }
+    .nav a {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .nav a:hover { opacity: 0.6; }
+
+    .announcement-bar {
+      background: var(--ink);
+      color: var(--highlight);
+      text-align: center;
+      font-size: 13px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      font-weight: 600;
+      padding: 10px 0;
+    }
+
+    .hero {
+      padding: 0;
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 90%;
+      display: block;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      bottom: 56px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .hero-tagline {
+      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 34px;
+      color: #ffffff;
+      margin: 0;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+      letter-spacing: 0.12em;
+      font-weight: 400;
+    }
+
+    .products,
+    .photo-strip,
+    .about,
+    .site-footer {
+      position: relative;
+      z-index: 1;
+      background: var(--bg);
+    }
+
+    .about { background: var(--sage-deep); }
+
+    .products { padding-top: 80px; }
+
+    .hero-banner {
+      display: grid;
+      grid-template-columns: 1fr;
+      background: var(--bg);
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .hero-images {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      height: 460px;
+    }
+
+    .hero-images--single {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-carousel {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      pointer-events: none;
+    }
+    .hero-slide.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .hero-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: var(--ink);
+      color: var(--bg);
+      font-size: 22px;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      box-shadow: 0 2px 6px rgba(0, 44, 57, 0.25);
+      transition: background 0.15s ease;
+    }
+    .hero-arrow:hover { background: var(--sage-deep); }
+    .hero-arrow-prev { left: 14px; }
+    .hero-arrow-next { right: 14px; }
+
+    .hero-dots {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 3;
+    }
+    .hero-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(0, 44, 57, 0.35);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 0.15s ease;
+    }
+    .hero-dot.is-active { background: var(--ink); }
+
+    .hero-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      text-align: center;
+    }
+
+    .hero-headline {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 34px;
+      color: var(--ink);
+      letter-spacing: 0.03em;
+      margin: 0;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .hero-cta {
+      background: var(--bg);
+      color: var(--brand-green);
+      padding: 18px 56px;
+      border-radius: 999px;
+      font-size: 18px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+      transition: all 0.2s ease;
+    }
+
+    .hero-cta:hover {
+      background: var(--brand-green-light);
+      color: var(--bg);
+    }
+
+    @media (max-width: 600px) {
+      .hero-headline { font-size: 22px; }
+      .hero-cta { padding: 12px 28px; font-size: 12px; }
+    }
+
+    .hero-img {
+      background: var(--placeholder);
+      overflow: hidden;
+    }
+
+    .hero-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-pitch {
+      background: var(--ink);
+      color: var(--bg);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      gap: 14px;
+    }
+
+    .hero-pitch-logo {
+      width: 120px;
+      height: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .hero-pitch-headline {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 18px;
+      letter-spacing: 0.05em;
+      margin-top: 4px;
+    }
+
+    .hero-pitch-text {
+      font-size: 13px;
+      line-height: 1.6;
+      opacity: 0.85;
+      max-width: 240px;
+    }
+
+    .btn-pitch {
+      background: var(--bg);
+      color: var(--ink);
+      border: 1px solid var(--bg);
+      padding: 11px 28px;
+      text-decoration: none;
+      display: inline-block;
+      border-radius: var(--radius);
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-pitch:hover {
+      background: var(--highlight);
+      border-color: var(--highlight);
+      color: var(--ink);
+    }
+
+    .photo-strip { padding: 0; }
+
+    .photo-strip-wrap {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      --visible-count: 4;
+    }
+
+    .photo-strip-track {
+      display: flex;
+      width: 100%;
+      transition: transform 0.45s ease;
+    }
+
+    .strip-img {
+      flex: 0 0 calc(100% / var(--visible-count));
+      aspect-ratio: 4 / 5;
+      background: var(--placeholder);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .strip-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .strip-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      border: 1.5px solid var(--bg);
+      background: var(--brand-green);
+      color: var(--bg);
+      font-size: 28px;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      box-shadow: 0 4px 14px rgba(0, 44, 57, 0.35);
+      transition: background 0.15s ease;
+    }
+    .strip-arrow:hover { background: var(--brand-green-light); }
+    .strip-arrow:disabled { opacity: 0.35; cursor: default; }
+    .strip-arrow-prev { left: 16px; }
+    .strip-arrow-next { right: 16px; }
+
+    .strip-img--contain {
+      background: var(--bg);
+    }
+
+    .strip-img--contain img {
+      object-fit: contain;
+    }
+
+    .products { padding: 32px 0 64px; }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .product-card { display: flex; flex-direction: column; gap: 12px; }
+
+    .product-aside {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-end;
+      gap: 14px;
+      padding: 24px 8px 24px 60px;
+    }
+
+    .speech-bubble {
+      background: var(--bg);
+      border: 1.5px solid var(--brand-green);
+      border-radius: 22px;
+      padding: 14px 22px;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 18px;
+      color: var(--brand-green);
+      text-align: center;
+      position: relative;
+      max-width: 260px;
+    }
+
+    .speech-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: -14px;
+      right: 32px;
+      width: 24px;
+      height: 24px;
+      background: var(--bg);
+      border-right: 1.5px solid var(--brand-green);
+      border-bottom: 1.5px solid var(--brand-green);
+      transform: rotate(45deg);
+    }
+
+    .character-illustration {
+      width: 200px;
+      height: auto;
+      display: block;
+      object-fit: contain;
+    }
+
+    .product-image {
+      background: var(--placeholder);
+      border-radius: var(--radius);
+      aspect-ratio: 4 / 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      width: 100%;
+      height: auto;
+      font: inherit;
+      color: inherit;
+      overflow: hidden;
+    }
+
+    .product-image:hover { opacity: 0.92; }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: var(--radius);
+    }
+
+    .color-swatches { display: flex; gap: 10px; margin-top: 4px; }
+
+    .swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      padding: 0;
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      transition: outline-color 0.15s ease;
+    }
+
+    .swatch.is-active { outline-color: var(--ink); }
+
+    .product-name {
+      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 24px;
+      font-weight: 500;
+      margin-top: 8px;
+      color: var(--brand-green);
+      letter-spacing: 0.01em;
+    }
+    .product-price {
+      font-size: 16px;
+      color: var(--brand-green);
+      margin-bottom: 4px;
+    }
+
+    .card-section { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+    .card-section-label {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", "Times New Roman", serif;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--brand-green);
+      text-transform: uppercase;
+    }
+
+    .details-link {
+      align-self: flex-start;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: var(--brand-green-light);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .details-link:hover { color: var(--brand-green); }
+
+    .img-label {
+      color: var(--placeholder-ink);
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .product-actions { display: flex; gap: 8px; }
+
+    .btn {
+      flex: 1;
+      padding: 14px 16px;
+      font-size: 13px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border-radius: 999px;
+      cursor: pointer;
+      border: 1px solid var(--ink);
+      transition: all 0.2s ease;
+      font-weight: 500;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+    }
+
+    .btn-primary {
+      background: var(--brand-green-light);
+      color: var(--brand-green);
+      border-color: var(--brand-green-light);
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+    }
+    .btn-primary:hover {
+      background: var(--highlight);
+      color: var(--brand-green);
+      border-color: var(--brand-green);
+    }
+
+    .btn-secondary { background: transparent; color: var(--ink); }
+    .btn-secondary:hover { background: var(--ink); color: var(--highlight); }
+
+    .about {
+      padding: 110px 0 110px;
+      background: var(--brand-green-light);
+      color: var(--bg);
+      position: relative;
+      z-index: 1;
+    }
+
+    .about::before,
+    .about::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 36px;
+      background-image: url('assets/border-horizontal.png');
+      background-repeat: repeat-x;
+      background-size: auto 100%;
+      background-position: left center;
+      pointer-events: none;
+    }
+    .about::before { top: 0; }
+    .about::after { bottom: 0; }
+
+    .about-grid {
+      gap: 64px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .about-text {
+      padding: 12px 0;
+    }
+
+    .about-logo {
+      position: absolute;
+      bottom: 20px;
+      left: 28px;
+      width: 36px;
+      height: auto;
+      filter: brightness(0) invert(1);
+      opacity: 0.85;
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .about-text h2 {
+      font-size: 28px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      color: var(--bg);
+    }
+    .about-text p { color: var(--bg); margin-bottom: 14px; font-size: 15px; opacity: 0.95; }
+
+    .about-image {
+      background: var(--placeholder);
+      border-radius: var(--radius);
+      aspect-ratio: 9 / 16;
+      max-height: 720px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .about-image img,
+    .about-image video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .modal[hidden] { display: none; }
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 44, 57, 0.55);
+      backdrop-filter: blur(2px);
+    }
+    .modal-content {
+      position: relative;
+      background: var(--bg);
+      border-radius: var(--radius);
+      max-width: 1000px;
+      width: 100%;
+      max-height: 92vh;
+      overflow-y: auto;
+      box-shadow: 0 16px 48px rgba(0, 44, 57, 0.25);
+    }
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background: none;
+      border: none;
+      font-size: 32px;
+      line-height: 1;
+      color: var(--ink);
+      cursor: pointer;
+      z-index: 2;
+      padding: 4px 8px;
+    }
+    .modal-close:hover { color: var(--sage-deep); }
+
+    .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    .modal-image-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 28px 0 28px 28px;
+    }
+
+    .modal-image {
+      background: var(--placeholder);
+      aspect-ratio: 4 / 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+    }
+
+    .modal-flat {
+      background: var(--bg);
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-flat[hidden] { display: none; }
+
+    .modal-flat img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .modal-image-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .modal-image-img[hidden] { display: none; }
+
+    .carousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1.5px solid var(--bg);
+      background: var(--brand-green);
+      color: var(--bg);
+      font-size: 26px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s ease;
+      z-index: 2;
+      padding: 0;
+      box-shadow: 0 4px 12px rgba(0, 44, 57, 0.25);
+    }
+
+    .carousel-arrow:hover { background: var(--brand-green-light); }
+    .carousel-arrow-prev { left: 12px; }
+    .carousel-arrow-next { right: 12px; }
+    .carousel-arrow[hidden] { display: none; }
+
+    .carousel-counter {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 44, 57, 0.7);
+      color: var(--bg);
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      z-index: 2;
+    }
+    .carousel-counter[hidden] { display: none; }
+    .modal-details { padding: 40px 36px; position: relative; }
+
+    .modal-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 18px;
+    }
+    .modal-header-text { display: flex; flex-direction: column; gap: 4px; }
+
+    .modal-color-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+    .modal-color-label {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      color: var(--brand-green);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      margin: 0;
+    }
+
+    .modal-corner-mark {
+      position: absolute;
+      bottom: 24px;
+      right: 28px;
+      width: 32px;
+      height: auto;
+      filter: brightness(0) saturate(100%) invert(38%) sepia(13%) saturate(672%) hue-rotate(45deg) brightness(96%) contrast(89%);
+      opacity: 0.85;
+    }
+
+    .modal-title { font-size: 30px; letter-spacing: 0.04em; margin-bottom: 0; color: var(--brand-green); font-weight: 500; }
+    .modal-tagline {
+      font-size: 14px;
+      color: var(--brand-green);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .modal-tagline[hidden] { display: none; }
+    .modal-price {
+      font-size: 14px;
+      color: var(--brand-green);
+      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      margin: 0;
+    }
+
+    .modal-fit-note {
+      font-size: 14px;
+      color: var(--brand-green);
+      line-height: 1.6;
+      margin: 0 0 22px;
+    }
+    .modal-fit-note[hidden] { display: none; }
+
+    .modal-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 22px;
+      font-size: 14px;
+      color: var(--brand-green);
+      line-height: 1.7;
+    }
+    .modal-bullets[hidden] { display: none; }
+    .modal-bullets li {
+      padding: 3px 0 3px 22px;
+      position: relative;
+    }
+    .modal-bullets li::before {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 12px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--brand-green);
+    }
+
+    .modal-section { margin-bottom: 22px; }
+    .modal-section h4 {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      margin-bottom: 10px;
+      color: var(--brand-green);
+      font-weight: 500;
+    }
+
+    .modal-swatches { display: flex; gap: 10px; }
+
+    .size-options { display: flex; gap: 8px; flex-wrap: wrap; }
+    .size-option {
+      padding: 10px 16px;
+      min-width: 44px;
+      border: 1px solid var(--brand-green);
+      background: var(--bg);
+      cursor: pointer;
+      border-radius: 999px;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      color: var(--brand-green);
+      text-align: center;
+    }
+    .size-option:hover, .size-option.is-active {
+      border-color: var(--ink);
+      background: var(--ink);
+      color: var(--highlight);
+    }
+
+    .modal-actions { display: flex; gap: 8px; margin: 24px 0 28px; }
+
+    .size-chart-desc {
+      font-size: 14px;
+      color: var(--brand-green);
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .size-chart-unit {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 11px;
+      color: var(--brand-green);
+      letter-spacing: 0.16em;
+      margin-bottom: 12px;
+    }
+
+    .size-chart-footer {
+      margin-top: 18px;
+    }
+
+    .size-chart-footer h5 {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+      color: var(--brand-green);
+      font-weight: 500;
+    }
+
+    .size-chart-footer p {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 11px;
+      color: var(--brand-green-light);
+      line-height: 1.7;
+      letter-spacing: 0.12em;
+    }
+
+    .size-chart-footer a {
+      color: var(--brand-green-light);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .size-chart-footer a:hover {
+      color: var(--brand-green);
+    }
+
+    .size-chart {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 12px;
+      color: var(--brand-green);
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .size-chart th, .size-chart td {
+      text-align: left;
+      padding: 10px 14px;
+      letter-spacing: 0.1em;
+    }
+    .size-chart thead tr {
+      background: rgba(138, 165, 114, 0.18);
+    }
+    .size-chart th {
+      font-weight: 500;
+      text-transform: uppercase;
+      color: var(--brand-green);
+    }
+    .size-chart tbody tr + tr td {
+      border-top: 1px solid rgba(138, 165, 114, 0.25);
+    }
+
+    .modal-facts { list-style: none; padding: 0; font-size: 14px; color: var(--muted); }
+    .modal-facts li { padding: 4px 0; padding-left: 20px; position: relative; }
+    .modal-facts li::before { content: "•"; position: absolute; left: 6px; color: var(--sage-deep); }
+
+    body.modal-open { overflow: hidden; }
+
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding: 20px 28px;
+      color: var(--brand-green);
+      font-size: 13px;
+      background: var(--bg);
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      max-width: none;
+    }
+
+    .footer-logo {
+      height: 32px;
+      width: auto;
+      filter: brightness(0) saturate(100%) invert(38%) sepia(13%) saturate(672%) hue-rotate(45deg) brightness(96%) contrast(89%);
+    }
+
+    .footer-copy { margin: 0; }
+
+    @media (max-width: 900px) {
+      .hero-banner {
+        grid-template-columns: 1fr;
+      }
+      .photo-strip-wrap { --visible-count: 2; }
+    }
+
+    @media (max-width: 500px) {
+      .photo-strip-wrap { --visible-count: 1; }
+    }
+
+    @media (max-width: 800px) {
+      .product-grid { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-image { order: -1; }
+      .nav { gap: 12px; }
+      .nav a { font-size: 12px; }
+      .brand-wordmark { font-size: 16px; letter-spacing: 0.3em; padding-left: 0.3em; }
+      .brand-mark img { height: 22px; }
+      .hero-tagline { font-size: 22px; letter-spacing: 0.1em; }
+      .hero-cta { font-size: 14px; padding: 14px 36px; letter-spacing: 0.22em; }
+      .modal-grid { grid-template-columns: 1fr; }
+      .modal-image-col { padding: 20px; }
+      .modal-header-row { flex-direction: column; align-items: flex-start; gap: 14px; }
+      .modal-color-block { align-items: flex-start; }
+      .product-aside { padding: 16px 8px; align-items: center; }
+      .character-illustration { width: 160px; }
+    }
+
+    @media (max-width: 760px) {
+      .modal-grid { grid-template-columns: 1fr; }
+      .modal-details { padding: 28px 24px; }
+    }

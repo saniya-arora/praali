@@ -1,0 +1,209 @@
+{%- comment -%}
+  Renders the product detail modal markup. JS in theme.js populates the modal
+  on click of a product card or "View details" link.
+{%- endcomment -%}
+
+<div class="modal" id="productModal" hidden>
+  <div class="modal-overlay" data-modal-close></div>
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal-close" data-modal-close aria-label="Close">×</button>
+    <div class="modal-grid">
+      <div class="modal-image-col">
+        <div class="modal-image" data-modal-image>
+          <img class="modal-image-img" data-modal-image-img alt="" hidden />
+          <span class="img-label" data-modal-image-label></span>
+          <button class="carousel-arrow carousel-arrow-prev" data-carousel-prev aria-label="Previous image" hidden>‹</button>
+          <button class="carousel-arrow carousel-arrow-next" data-carousel-next aria-label="Next image" hidden>›</button>
+          <div class="carousel-counter" data-carousel-counter hidden></div>
+        </div>
+        <div class="modal-flat" data-modal-flat hidden>
+          <img data-modal-flat-img alt="" />
+        </div>
+      </div>
+      <div class="modal-details">
+        <div class="modal-header-row">
+          <div class="modal-header-text">
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <p class="modal-price" data-modal-price></p>
+          </div>
+          <div class="modal-color-block">
+            <div class="modal-swatches" data-modal-swatches></div>
+            <p class="modal-color-label">COLOR : <span data-modal-color-name></span></p>
+          </div>
+        </div>
+
+        <p class="modal-tagline" data-modal-tagline hidden></p>
+        <ul class="modal-bullets" data-modal-bullets hidden></ul>
+        <p class="modal-fit-note" data-modal-fit-note hidden></p>
+
+        <div class="modal-section">
+          <h4>Size</h4>
+          <div class="size-options" data-modal-sizes></div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-primary">Buy Now</button>
+        </div>
+
+        <div class="modal-section">
+          <h4>Size Chart</h4>
+          <p class="size-chart-desc">Fits true to size, with a little bit of stretch to accommodate for our everchanging bodies and lots of breath and movement.</p>
+          <p class="size-chart-unit">ALL MEASUREMENTS ARE IN INCHES.</p>
+          <table class="size-chart">
+            <thead data-modal-size-thead></thead>
+            <tbody data-modal-size-chart></tbody>
+          </table>
+          <div class="size-chart-footer">
+            <h5>Don't see your size yet?</h5>
+            <p>AS A NEW BRAND WE'RE THOUGHTFULLY GROWING OUR SIZE RANGE AND WOULD LOVE YOUR INPUT. IF YOU'D LIKE TO SEE YOUR SIZE IN FUTURE DROPS, LEAVE YOUR SIZING DETAILS <a href="https://forms.gle/4sgG7rauw2V9cXoq8" target="_blank" rel="noopener">HERE</a>.</p>
+          </div>
+        </div>
+        <img class="modal-corner-mark" src="{{ 'praali_mark.png' | asset_url }}" alt="" />
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- comment -%}
+  Product data — for the prototype we render hard-coded data inline.
+  TODO: hook this up to actual Shopify products + metafields.
+{%- endcomment -%}
+<script id="praali-products" type="application/json">
+{
+  "1": {
+    "name": "The Allie Top",
+    "tagline": "Finally, yoga clothing with embroidery and cute prints!",
+    "price": "$ 65.00 USD",
+    "fitNote": "I'm 5'2, wearing a medium. I have a shorter torso, lil tummy, and a DD chest.",
+    "defaultColorIndex": 2,
+    "colors": [
+      {
+        "name": "Cayenne", "hex": "#9C3E32",
+        "images": ["{{ 'top-cayenne-front.jpg' | asset_url }}", "{{ 'top-cayenne-side.jpg' | asset_url }}", "{{ 'top-cayenne-back.jpg' | asset_url }}"],
+        "flat": "{{ 'top-cayenne-flat.jpg' | asset_url }}"
+      },
+      {
+        "name": "Lilac", "hex": "#C4ADD4",
+        "images": ["{{ 'top-lilac-front.jpg' | asset_url }}", "{{ 'top-lilac-side.jpg' | asset_url }}", "{{ 'top-lilac-back.jpg' | asset_url }}"],
+        "flat": "{{ 'top-lilac-flat.jpg' | asset_url }}"
+      },
+      {
+        "name": "Sage Green", "hex": "#A9B48B",
+        "images": ["{{ 'top-sage-front.jpg' | asset_url }}", "{{ 'top-sage-side.jpg' | asset_url }}", "{{ 'top-sage-back.jpg' | asset_url }}"],
+        "flat": "{{ 'top-sage-flat.jpg' | asset_url }}"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L", "XL"],
+    "sizeColumns": [
+      {"label": "Bust", "key": "bust"},
+      {"label": "Waist", "key": "waist"},
+      {"label": "Length", "key": "length"}
+    ],
+    "sizeChart": [
+      {"size": "XS", "bust": "30–32", "waist": "24–26", "length": "17"},
+      {"size": "S",  "bust": "32–34", "waist": "26–28", "length": "17.25"},
+      {"size": "M",  "bust": "34–36", "waist": "28–30", "length": "17.5"},
+      {"size": "L",  "bust": "36–38", "waist": "30–32", "length": "17.75"},
+      {"size": "XL", "bust": "38–40", "waist": "32–34", "length": "18"}
+    ],
+    "bullets": [
+      "Built in sports bra",
+      "95% cotton 5% natural elastane",
+      "Washer and dryer friendly ofc",
+      "Made in India <3",
+      "Ethically made, everyone say thank you to my masterji Vikas ji!"
+    ]
+  },
+  "2": {
+    "name": "The Allie Capri Pants",
+    "tagline": "Finally, yoga clothing with embroidery and cute prints!",
+    "price": "$ 55.00 USD",
+    "fitNote": "I'm 5'2, wearing a medium. I have a shorter torso, lil tummy, and a DD chest.",
+    "defaultColorIndex": 2,
+    "colors": [
+      {
+        "name": "Cayenne", "hex": "#9C3E32",
+        "images": ["{{ 'capri-cayenne-front.jpg' | asset_url }}", "{{ 'capri-cayenne-side.jpg' | asset_url }}", "{{ 'capri-cayenne-back.jpg' | asset_url }}"],
+        "flat": "{{ 'capri-cayenne-flat.jpg' | asset_url }}"
+      },
+      {
+        "name": "Lilac", "hex": "#C4ADD4",
+        "images": ["{{ 'capri-lilac-front.jpg' | asset_url }}", "{{ 'capri-lilac-side.jpg' | asset_url }}", "{{ 'capri-lilac-back.jpg' | asset_url }}"],
+        "flat": "{{ 'capri-lilac-flat.jpg' | asset_url }}"
+      },
+      {
+        "name": "Sage Green", "hex": "#A9B48B",
+        "images": ["{{ 'capri-sage-front.jpg' | asset_url }}", "{{ 'capri-sage-side.jpg' | asset_url }}", "{{ 'capri-sage-back.jpg' | asset_url }}"],
+        "flat": "{{ 'capri-sage-flat.jpg' | asset_url }}"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L", "XL"],
+    "sizeColumns": [
+      {"label": "Waist", "key": "waist"},
+      {"label": "Hip", "key": "hip"},
+      {"label": "Length", "key": "length"}
+    ],
+    "sizeChart": [
+      {"size": "XS", "waist": "24–26", "hip": "34–36", "length": "27.25"},
+      {"size": "S",  "waist": "26–28", "hip": "36–38", "length": "27.6"},
+      {"size": "M",  "waist": "28–30", "hip": "38–40", "length": "28"},
+      {"size": "L",  "waist": "30–32", "hip": "40–42", "length": "28.6"},
+      {"size": "XL", "waist": "32–34", "hip": "42–44", "length": "29"}
+    ],
+    "bullets": [
+      "Mid/low waist. Designed to be worn however feels most comfortable for you!",
+      "Slight flare at the bottom",
+      "95% cotton 5% natural elastane",
+      "Washer and dryer friendly ofc",
+      "Made in India <3",
+      "Ethically made, everyone say thank you to my masterji Vikas ji!"
+    ]
+  },
+  "3": {
+    "name": "The Allie Set",
+    "tagline": "Finally, yoga clothing with embroidery and cute prints!",
+    "price": "$ 120.00 USD",
+    "fitNote": "I'm 5'2, wearing a medium. I have a shorter torso, lil tummy, and a DD chest.",
+    "defaultColorIndex": 2,
+    "colors": [
+      {
+        "name": "Cayenne", "hex": "#9C3E32",
+        "images": ["{{ 'set-cayenne-front.jpg' | asset_url }}", "{{ 'set-cayenne-angle.jpg' | asset_url }}", "{{ 'set-cayenne-side.jpg' | asset_url }}", "{{ 'set-cayenne-back.jpg' | asset_url }}"],
+        "flat": "{{ 'set-cayenne-flat.jpg' | asset_url }}"
+      },
+      {
+        "name": "Lilac", "hex": "#C4ADD4",
+        "images": ["{{ 'set-lilac-front.jpg' | asset_url }}", "{{ 'set-lilac-angle.jpg' | asset_url }}", "{{ 'set-lilac-side.jpg' | asset_url }}", "{{ 'set-lilac-back.jpg' | asset_url }}"],
+        "flat": "{{ 'set-lilac-flat.jpg' | asset_url }}"
+      },
+      {
+        "name": "Sage Green", "hex": "#A9B48B",
+        "images": ["{{ 'set-sage-front.jpg' | asset_url }}", "{{ 'set-sage-angle.jpg' | asset_url }}", "{{ 'set-sage-side.jpg' | asset_url }}", "{{ 'set-sage-back.jpg' | asset_url }}"],
+        "flat": "{{ 'set-sage-flat.jpg' | asset_url }}"
+      }
+    ],
+    "sizes": ["XS", "S", "M", "L", "XL"],
+    "sizeColumns": [
+      {"label": "Bust", "key": "bust"},
+      {"label": "Waist", "key": "waist"},
+      {"label": "Hip", "key": "hip"}
+    ],
+    "sizeChart": [
+      {"size": "XS", "bust": "30–32", "waist": "24–26", "hip": "34–36"},
+      {"size": "S",  "bust": "32–34", "waist": "26–28", "hip": "36–38"},
+      {"size": "M",  "bust": "34–36", "waist": "28–30", "hip": "38–40"},
+      {"size": "L",  "bust": "36–38", "waist": "30–32", "hip": "40–42"},
+      {"size": "XL", "bust": "38–40", "waist": "32–34", "hip": "42–44"}
+    ],
+    "bullets": [
+      "Built in sports bra",
+      "Mid/low waist. Designed to be worn however feels most comfortable for you!",
+      "Slight flare at the bottom",
+      "95% cotton 5% natural elastane",
+      "Washer and dryer friendly ofc",
+      "Made in India <3",
+      "Ethically made, everyone say thank you to my masterji Vikas ji!"
+    ]
+  }
+}
+</script>

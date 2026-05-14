@@ -1,0 +1,33 @@
+{% assign collection = collections[section.settings.collection] %}
+
+<section id="shop" class="products">
+  <div class="container">
+    <div class="product-grid">
+      {%- if collection != blank and collection.products.size > 0 -%}
+        {%- for product in collection.products limit: 3 -%}
+          {% render 'product-card', product: product, idx: forloop.index %}
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%} Placeholder when no products yet — uses default 3-product layout {%- endcomment -%}
+        {% render 'product-card-placeholder', idx: 1, name: 'The Allie Top', price: '$ 65.00 USD', image: 'top-sage-front.jpg' %}
+        {% render 'product-card-placeholder', idx: 2, name: 'The Allie Capri Pants', price: '$ 55.00 USD', image: 'capri-sage-front.jpg' %}
+        {% render 'product-card-placeholder', idx: 3, name: 'The Allie Set', price: '$ 120.00 USD', image: 'set-sage-front.jpg' %}
+      {%- endif -%}
+
+      <aside class="product-aside" aria-hidden="true">
+        <div class="speech-bubble">More coming soon babe!</div>
+        <img class="character-illustration" src="{{ 'illustration.png' | asset_url }}" alt="" />
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured products",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Collection to display (first 3 products)" }
+  ],
+  "presets": [{ "name": "Featured products" }]
+}
+{% endschema %}

@@ -1,0 +1,18 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="{{ routes.root_url }}" class="brand-mark" aria-label="{{ shop.name }} home">
+      <img src="{{ 'praali_mark.png' | asset_url }}" alt="{{ shop.name }}" />
+    </a>
+    <a href="{{ routes.root_url }}" class="brand-wordmark">PRAALI</a>
+    <nav class="nav nav-right">
+      <a href="{{ routes.cart_url }}" class="cart-link">CART ({{ cart.item_count }})</a>
+    </nav>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": []
+}
+{% endschema %}

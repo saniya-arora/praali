@@ -1,0 +1,47 @@
+<section class="photo-strip">
+  <div class="photo-strip-wrap">
+    <button class="strip-arrow strip-arrow-prev" data-strip-prev aria-label="Previous">‹</button>
+    <button class="strip-arrow strip-arrow-next" data-strip-next aria-label="Next">›</button>
+    <div class="photo-strip-track" data-strip-track>
+      {%- for block in section.blocks -%}
+        <div class="strip-img">
+          {%- if block.settings.image -%}
+            <img src="{{ block.settings.image | image_url: width: 1200 }}" alt="" />
+          {%- else -%}
+            <img src="{{ block.settings.fallback | asset_url }}" alt="" />
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Photo gallery",
+  "max_blocks": 12,
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "Photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "fallback", "label": "Fallback filename (in assets)", "default": "gallery-1.jpg" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Photo gallery",
+      "blocks": [
+        { "type": "photo", "settings": { "fallback": "gallery-1.jpg" } },
+        { "type": "photo", "settings": { "fallback": "gallery-2.jpg" } },
+        { "type": "photo", "settings": { "fallback": "gallery-3.jpg" } },
+        { "type": "photo", "settings": { "fallback": "gallery-4.jpg" } },
+        { "type": "photo", "settings": { "fallback": "gallery-5.jpg" } },
+        { "type": "photo", "settings": { "fallback": "gallery-6.jpg" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

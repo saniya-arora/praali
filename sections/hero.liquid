@@ -1,0 +1,33 @@
+{% assign hero_image = section.settings.hero_image %}
+{% assign hero_tagline = section.settings.tagline %}
+{% assign hero_cta_text = section.settings.cta_text %}
+{% assign hero_cta_link = section.settings.cta_link %}
+
+<section class="hero">
+  {%- if hero_image -%}
+    <img class="hero-bg" src="{{ hero_image | image_url: width: 2400 }}" alt="" />
+  {%- else -%}
+    <img class="hero-bg" src="{{ 'hero-main.jpg' | asset_url }}" alt="" />
+  {%- endif -%}
+  <div class="hero-overlay">
+    {%- if hero_cta_text != blank -%}
+      <a href="{{ hero_cta_link | default: '#shop' }}" class="hero-cta">{{ hero_cta_text }}</a>
+    {%- endif -%}
+    {%- if hero_tagline != blank -%}
+      <p class="hero-tagline">{{ hero_tagline }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "settings": [
+    { "type": "image_picker", "id": "hero_image", "label": "Hero background image" },
+    { "type": "text", "id": "tagline", "label": "Tagline", "default": "Made where Yoga began." },
+    { "type": "text", "id": "cta_text", "label": "CTA text", "default": "PREORDER HERE" },
+    { "type": "url", "id": "cta_link", "label": "CTA link" }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

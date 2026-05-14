@@ -19,8 +19,6 @@
       --placeholder-ink: #002C39;
       --radius: 14px;
       --radius-lg: 22px;
-      --brand-green: #5C6B4B;
-      --brand-green-light: #8AA572;
       --shadow: 0 2px 12px rgba(0, 44, 57, 0.06);
     }
 
@@ -42,24 +40,19 @@
     .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
     .site-header {
-      position: fixed;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg);
+      position: sticky;
       top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: rgba(237, 232, 224, 0.55);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+      z-index: 10;
     }
 
     .header-inner {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      padding: 10px 24px;
+      padding: 20px 24px;
       gap: 24px;
-      max-width: none;
     }
 
     .nav-right { justify-self: end; }
@@ -70,25 +63,16 @@
       align-items: center;
       text-decoration: none;
     }
-    .brand-mark img { height: 28px; width: auto; display: block; }
+    .brand-mark img { height: 48px; width: auto; display: block; }
 
     .brand-wordmark {
       justify-self: center;
       font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", "Times New Roman", serif;
-      font-size: 18px;
-      letter-spacing: 0.45em;
-      color: var(--brand-green);
+      font-size: 30px;
+      letter-spacing: 0.32em;
+      color: var(--ink);
       text-decoration: none;
       font-weight: 400;
-      padding-left: 0.45em;
-    }
-
-    .site-header .nav a {
-      color: var(--brand-green);
-    }
-
-    .brand-mark img {
-      filter: brightness(0) saturate(100%) invert(38%) sepia(13%) saturate(672%) hue-rotate(45deg) brightness(96%) contrast(89%);
     }
 
     .nav { display: flex; gap: 28px; }
@@ -112,55 +96,7 @@
       padding: 10px 0;
     }
 
-    .hero {
-      padding: 0;
-      position: sticky;
-      top: 0;
-      z-index: 0;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .hero-bg {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      bottom: 40px;
-      right: 48px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 14px;
-      z-index: 2;
-    }
-
-    .hero-tagline {
-      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 20px;
-      color: #ffffff;
-      margin: 0;
-      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
-      letter-spacing: 0.02em;
-    }
-
-    .products,
-    .photo-strip,
-    .about,
-    .site-footer {
-      position: relative;
-      z-index: 1;
-      background: var(--bg);
-    }
-
-    .about { background: var(--sage-deep); }
-
-    .products { padding-top: 80px; }
+    .hero { padding: 0 0 48px; }
 
     .hero-banner {
       display: grid;
@@ -184,8 +120,9 @@
     .hero-carousel {
       display: block;
       position: relative;
-      width: 100%;
-      height: 100%;
+      height: auto;
+      aspect-ratio: 2 / 1;
+      max-height: 760px;
     }
 
     .hero-slide {
@@ -202,7 +139,7 @@
     .hero-slide img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       display: block;
     }
 
@@ -276,24 +213,24 @@
     }
 
     .hero-cta {
-      background: var(--bg);
-      color: var(--brand-green);
-      padding: 14px 38px;
-      border-radius: 999px;
-      font-size: 13px;
-      letter-spacing: 0.28em;
+      background: var(--ink);
+      color: var(--highlight);
+      padding: 16px 40px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      letter-spacing: 0.25em;
       text-transform: uppercase;
-      font-weight: 500;
+      font-weight: 600;
       text-decoration: none;
       white-space: nowrap;
       font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 6px 20px rgba(0, 44, 57, 0.35);
       transition: all 0.2s ease;
     }
 
     .hero-cta:hover {
-      background: var(--brand-green-light);
-      color: var(--bg);
+      background: var(--highlight);
+      color: var(--ink);
     }
 
     @media (max-width: 600px) {
@@ -440,53 +377,11 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 48px;
-      max-width: 1100px;
+      max-width: 980px;
       margin: 0 auto;
     }
 
     .product-card { display: flex; flex-direction: column; gap: 12px; }
-
-    .product-aside {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 18px;
-      padding: 24px;
-    }
-
-    .speech-bubble {
-      background: var(--bg);
-      border: 1.5px solid var(--brand-green);
-      border-radius: 22px;
-      padding: 14px 22px;
-      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
-      font-size: 18px;
-      color: var(--brand-green);
-      text-align: center;
-      position: relative;
-      max-width: 260px;
-    }
-
-    .speech-bubble::after {
-      content: "";
-      position: absolute;
-      bottom: -14px;
-      right: 32px;
-      width: 24px;
-      height: 24px;
-      background: var(--bg);
-      border-right: 1.5px solid var(--brand-green);
-      border-bottom: 1.5px solid var(--brand-green);
-      transform: rotate(45deg);
-    }
-
-    .character-illustration {
-      width: 280px;
-      height: auto;
-      display: block;
-      object-fit: contain;
-    }
 
     .product-image {
       background: var(--placeholder);
@@ -532,27 +427,15 @@
 
     .swatch.is-active { outline-color: var(--ink); }
 
-    .product-name {
-      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 24px;
-      font-weight: 500;
-      margin-top: 8px;
-      color: var(--brand-green);
-      letter-spacing: 0.01em;
-    }
-    .product-price {
-      font-size: 16px;
-      color: var(--brand-green);
-      margin-bottom: 4px;
-    }
+    .product-name { font-size: 18px; margin-top: 8px; }
+    .product-price { font-size: 14px; color: var(--muted); margin-bottom: 4px; }
 
-    .card-section { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .card-section { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
     .card-section-label {
-      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", "Times New Roman", serif;
-      font-size: 14px;
-      letter-spacing: 0.12em;
-      color: var(--brand-green);
+      font-size: 12px;
       text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--muted);
     }
 
     .details-link {
@@ -581,49 +464,28 @@
 
     .btn {
       flex: 1;
-      padding: 14px 16px;
+      padding: 12px 16px;
       font-size: 13px;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      border-radius: 999px;
+      border-radius: var(--radius);
       cursor: pointer;
       border: 1px solid var(--ink);
       transition: all 0.2s ease;
       font-weight: 500;
-      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
     }
 
     .btn-primary {
-      background: var(--brand-green);
-      color: var(--bg);
-      border-color: var(--brand-green);
+      background: var(--accent);
+      color: var(--accent-ink);
+      border-color: var(--accent);
     }
-    .btn-primary:hover {
-      background: var(--highlight);
-      color: var(--ink);
-      border-color: var(--ink);
-    }
+    .btn-primary:hover { background: var(--highlight); color: var(--ink); border-color: var(--ink); }
 
     .btn-secondary { background: transparent; color: var(--ink); }
     .btn-secondary:hover { background: var(--ink); color: var(--highlight); }
 
-    .about {
-      padding: 80px 0;
-      background: var(--brand-green);
-      color: var(--bg);
-      position: relative;
-      z-index: 1;
-    }
-
-    .about-logo {
-      position: absolute;
-      bottom: 20px;
-      left: 28px;
-      width: 36px;
-      height: auto;
-      filter: brightness(0) invert(1);
-      opacity: 0.85;
-    }
+    .about { padding: 80px 0; background: var(--sage-deep); color: var(--bg); }
     .about-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -702,13 +564,6 @@
     .modal-close:hover { color: var(--sage-deep); }
 
     .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
-    .modal-image-col {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      padding: 28px 0 28px 28px;
-    }
-
     .modal-image {
       background: var(--placeholder);
       aspect-ratio: 4 / 5;
@@ -717,26 +572,6 @@
       justify-content: center;
       position: relative;
       overflow: hidden;
-      border-radius: var(--radius);
-    }
-
-    .modal-flat {
-      background: var(--bg);
-      aspect-ratio: 4 / 3;
-      overflow: hidden;
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-flat[hidden] { display: none; }
-
-    .modal-flat img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
     }
 
     .modal-image-img {
@@ -840,17 +675,14 @@
 
     .size-options { display: flex; gap: 8px; flex-wrap: wrap; }
     .size-option {
-      padding: 10px 16px;
-      min-width: 44px;
-      border: 1px solid var(--brand-green);
-      background: var(--bg);
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      background: transparent;
       cursor: pointer;
-      border-radius: 999px;
-      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      border-radius: var(--radius);
+      font: inherit;
       font-size: 13px;
-      letter-spacing: 0.1em;
-      color: var(--brand-green);
-      text-align: center;
+      letter-spacing: 0.05em;
     }
     .size-option:hover, .size-option.is-active {
       border-color: var(--ink);
@@ -920,26 +752,11 @@
 
     .site-footer {
       border-top: 1px solid var(--line);
-      padding: 20px 28px;
-      color: var(--brand-green);
+      padding: 24px 0;
+      text-align: center;
+      color: var(--muted);
       font-size: 13px;
-      background: var(--bg);
     }
-
-    .footer-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: none;
-    }
-
-    .footer-logo {
-      height: 32px;
-      width: auto;
-      filter: brightness(0) saturate(100%) invert(38%) sepia(13%) saturate(672%) hue-rotate(45deg) brightness(96%) contrast(89%);
-    }
-
-    .footer-copy { margin: 0; }
 
     @media (max-width: 900px) {
       .hero-banner {
@@ -976,7 +793,7 @@
   <header class="site-header">
     <div class="container header-inner">
       <a href="#" class="brand-mark" aria-label="Praali home">
-        <img src="assets/praali_mark.png" alt="Praali" />
+        <img src="assets/praali_logo.png" alt="Praali" />
       </a>
       <a href="#" class="brand-wordmark">PRAALI</a>
       <nav class="nav nav-right">
@@ -986,12 +803,25 @@
   </header>
 
   <main>
-    <!-- HERO: full-bleed single image -->
+    <!-- HERO: single image + pitch block -->
     <section class="hero">
-      <img class="hero-bg" src="assets/hero-main.jpg" alt="" />
-      <div class="hero-overlay">
-        <a href="#shop" class="hero-cta">PREORDER HERE</a>
-        <p class="hero-tagline">Made where Yoga began.</p>
+      <div class="hero-banner">
+        <div class="hero-images hero-images--single hero-carousel">
+          <div class="hero-slide is-active"><img src="assets/hero-cayenne.jpg" alt="" /></div>
+          <div class="hero-slide"><img src="assets/hero-lilac.jpg" alt="" /></div>
+          <div class="hero-slide"><img src="assets/hero-sage.jpg" alt="" /></div>
+          <div class="hero-center">
+            <h2 class="hero-headline">Made where Yoga began</h2>
+            <a href="#shop" class="hero-cta">Pre-Order Now</a>
+          </div>
+          <button class="hero-arrow hero-arrow-prev" data-hero-prev aria-label="Previous">‹</button>
+          <button class="hero-arrow hero-arrow-next" data-hero-next aria-label="Next">›</button>
+          <div class="hero-dots">
+            <button class="hero-dot is-active" data-hero-dot="0" aria-label="Slide 1"></button>
+            <button class="hero-dot" data-hero-dot="1" aria-label="Slide 2"></button>
+            <button class="hero-dot" data-hero-dot="2" aria-label="Slide 3"></button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1001,16 +831,16 @@
         <div class="product-grid">
           <!-- Product 1 -->
           <article class="product-card" data-product="1">
-            <button class="product-image" data-modal-open="1" aria-label="View The Allie Top details">
-              <img src="assets/top-sage-front.jpg" alt="" />
+            <button class="product-image" data-modal-open="1" aria-label="View product 1 details">
+              <img src="assets/product1-1.jpg" alt="" />
             </button>
             <div class="color-swatches">
-              <button class="swatch" data-color="0" style="background: #9C3E32;" aria-label="Cayenne"></button>
+              <button class="swatch is-active" data-color="0" style="background: #9C3E32;" aria-label="Cayenne"></button>
               <button class="swatch" data-color="1" style="background: #C4ADD4;" aria-label="Lilac"></button>
-              <button class="swatch is-active" data-color="2" style="background: #A9B48B;" aria-label="Sage Green"></button>
+              <button class="swatch" data-color="2" style="background: #A9B48B;" aria-label="Sage Green"></button>
             </div>
             <h3 class="product-name">The Allie Top</h3>
-            <p class="product-price">$65</p>
+            <p class="product-price">$XX</p>
             <div class="card-section">
               <span class="card-section-label">Size</span>
               <div class="size-options" data-card-sizes></div>
@@ -1023,16 +853,16 @@
 
           <!-- Product 2 -->
           <article class="product-card" data-product="2">
-            <button class="product-image" data-modal-open="2" aria-label="View The Allie Capri Pants details">
-              <img src="assets/capri-sage-front.jpg" alt="" />
+            <button class="product-image" data-modal-open="2" aria-label="View product 2 details">
+              <span class="img-label">product 2 — color 1</span>
             </button>
             <div class="color-swatches">
-              <button class="swatch" data-color="0" style="background: #9C3E32;" aria-label="Cayenne"></button>
+              <button class="swatch is-active" data-color="0" style="background: #9C3E32;" aria-label="Cayenne"></button>
               <button class="swatch" data-color="1" style="background: #C4ADD4;" aria-label="Lilac"></button>
-              <button class="swatch is-active" data-color="2" style="background: #A9B48B;" aria-label="Sage Green"></button>
+              <button class="swatch" data-color="2" style="background: #A9B48B;" aria-label="Sage Green"></button>
             </div>
             <h3 class="product-name">The Allie Capri Pants</h3>
-            <p class="product-price">$55</p>
+            <p class="product-price">$XX</p>
             <div class="card-section">
               <span class="card-section-label">Size</span>
               <div class="size-options" data-card-sizes></div>
@@ -1042,33 +872,6 @@
             </div>
             <button class="details-link" data-modal-open="2">View details</button>
           </article>
-
-          <!-- Product 3 — The Allie Set -->
-          <article class="product-card" data-product="3">
-            <button class="product-image" data-modal-open="3" aria-label="View The Allie Set details">
-              <img src="assets/set-sage-front.jpg" alt="" />
-            </button>
-            <div class="color-swatches">
-              <button class="swatch" data-color="0" style="background: #9C3E32;" aria-label="Cayenne"></button>
-              <button class="swatch" data-color="1" style="background: #C4ADD4;" aria-label="Lilac"></button>
-              <button class="swatch is-active" data-color="2" style="background: #A9B48B;" aria-label="Sage Green"></button>
-            </div>
-            <h3 class="product-name">The Allie Set</h3>
-            <p class="product-price">$120</p>
-            <div class="card-section">
-              <span class="card-section-label">Size</span>
-              <div class="size-options" data-card-sizes></div>
-            </div>
-            <div class="product-actions">
-              <button class="btn btn-primary">Buy Now</button>
-            </div>
-            <button class="details-link" data-modal-open="3">View details</button>
-          </article>
-
-          <aside class="product-aside" aria-hidden="true">
-            <div class="speech-bubble">More coming soon babe!</div>
-            <img class="character-illustration" src="assets/illustration.png" alt="" />
-          </aside>
         </div>
       </div>
     </section>
@@ -1079,17 +882,12 @@
       <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <button class="modal-close" data-modal-close aria-label="Close">×</button>
         <div class="modal-grid">
-          <div class="modal-image-col">
-            <div class="modal-image" data-modal-image>
-              <img class="modal-image-img" data-modal-image-img alt="" hidden />
-              <span class="img-label" data-modal-image-label></span>
-              <button class="carousel-arrow carousel-arrow-prev" data-carousel-prev aria-label="Previous image" hidden>‹</button>
-              <button class="carousel-arrow carousel-arrow-next" data-carousel-next aria-label="Next image" hidden>›</button>
-              <div class="carousel-counter" data-carousel-counter hidden></div>
-            </div>
-            <div class="modal-flat" data-modal-flat hidden>
-              <img data-modal-flat-img alt="" />
-            </div>
+          <div class="modal-image" data-modal-image>
+            <img class="modal-image-img" data-modal-image-img alt="" hidden />
+            <span class="img-label" data-modal-image-label></span>
+            <button class="carousel-arrow carousel-arrow-prev" data-carousel-prev aria-label="Previous image" hidden>‹</button>
+            <button class="carousel-arrow carousel-arrow-next" data-carousel-next aria-label="Next image" hidden>›</button>
+            <div class="carousel-counter" data-carousel-counter hidden></div>
           </div>
           <div class="modal-details">
             <h2 class="modal-title" id="modalTitle"></h2>
@@ -1124,7 +922,7 @@
               </table>
               <div class="size-chart-footer">
                 <h5>Don't see your size yet?</h5>
-                <p>As a new brand, we're thoughtfully growing our size range and would love your input. If you'd like to see your size in future drops, leave your sizing details <a href="https://forms.gle/4sgG7rauw2V9cXoq8" target="_blank" rel="noopener">here</a>.</p>
+                <p>As a new brand, we're thoughtfully growing our size range and would love your input. If you'd like to see your size in future drops, leave your sizing details <a href="#">here</a>.</p>
               </div>
             </div>
           </div>
@@ -1138,19 +936,20 @@
         <button class="strip-arrow strip-arrow-prev" data-strip-prev aria-label="Previous">‹</button>
         <button class="strip-arrow strip-arrow-next" data-strip-next aria-label="Next">›</button>
         <div class="photo-strip-track" data-strip-track>
-          <div class="strip-img strip-img--contain"><img src="assets/gallery-1.jpg" alt="" /></div>
+          <div class="strip-img"><img src="assets/gallery-1.jpg" alt="" /></div>
           <div class="strip-img"><img src="assets/gallery-2.jpg" alt="" /></div>
           <div class="strip-img"><img src="assets/gallery-3.jpg" alt="" /></div>
           <div class="strip-img"><img src="assets/gallery-4.jpg" alt="" /></div>
           <div class="strip-img"><img src="assets/gallery-5.jpg" alt="" /></div>
           <div class="strip-img"><img src="assets/gallery-6.jpg" alt="" /></div>
+          <div class="strip-img"><img src="assets/gallery-7.jpg" alt="" /></div>
+          <div class="strip-img"><img src="assets/gallery-8.jpg" alt="" /></div>
         </div>
       </div>
     </section>
 
     <!-- ABOUT -->
     <section id="about" class="about">
-      <img class="about-logo" src="assets/praali_mark.png" alt="" />
       <div class="container about-grid">
         <div class="about-text">
           <h2>Our Mission</h2>
@@ -1168,9 +967,8 @@
   </main>
 
   <footer class="site-footer">
-    <div class="footer-inner">
-      <img class="footer-logo" src="assets/praali_mark.png" alt="Praali" />
-      <p class="footer-copy"><span id="year"></span> Praali. All rights reserved</p>
+    <div class="container">
+      <p>&copy; <span id="year"></span> Praali. All rights reserved.</p>
     </div>
   </footer>
 
@@ -1183,25 +981,21 @@
         '1': {
           name: 'The Allie Top',
           tagline: 'Finally, yoga clothing with embroidery and cute prints!',
-          price: '$65',
+          price: '$XX',
           fitNote: "I'm 5'2, wearing a medium. I have a shorter torso, lil tummy, and a DD chest.",
-          defaultColorIndex: 2,
+          images: [
+            'assets/product1-1.jpg',
+            'assets/product1-2.jpg',
+            'assets/product1-3.jpg',
+            'assets/product1-4.jpg',
+            'assets/product1-5.jpg',
+            'assets/product1-6.jpg',
+            'assets/product1-7.jpg'
+          ],
           colors: [
-            {
-              name: 'Cayenne', hex: '#9C3E32',
-              images: ['assets/top-cayenne-front.jpg', 'assets/top-cayenne-side.jpg', 'assets/top-cayenne-back.jpg'],
-              flat: 'assets/top-cayenne-flat.jpg'
-            },
-            {
-              name: 'Lilac', hex: '#C4ADD4',
-              images: ['assets/top-lilac-front.jpg', 'assets/top-lilac-side.jpg', 'assets/top-lilac-back.jpg'],
-              flat: 'assets/top-lilac-flat.jpg'
-            },
-            {
-              name: 'Sage Green', hex: '#A9B48B',
-              images: ['assets/top-sage-front.jpg', 'assets/top-sage-side.jpg', 'assets/top-sage-back.jpg'],
-              flat: 'assets/top-sage-flat.jpg'
-            }
+            { name: 'Cayenne',    hex: '#9C3E32' },
+            { name: 'Lilac',      hex: '#C4ADD4' },
+            { name: 'Sage Green', hex: '#A9B48B' }
           ],
           sizes: ['XS', 'S', 'M', 'L', 'XL'],
           sizeColumns: [
@@ -1227,25 +1021,12 @@
         '2': {
           name: 'The Allie Capri Pants',
           tagline: 'Finally, yoga clothing with embroidery and cute prints!',
-          price: '$55',
+          price: '$XX',
           fitNote: "I'm 5'2, wearing a medium. I have a shorter torso, lil tummy, and a DD chest.",
-          defaultColorIndex: 2,
           colors: [
-            {
-              name: 'Cayenne', hex: '#9C3E32',
-              images: ['assets/capri-cayenne-front.jpg', 'assets/capri-cayenne-side.jpg', 'assets/capri-cayenne-back.jpg'],
-              flat: 'assets/capri-cayenne-flat.jpg'
-            },
-            {
-              name: 'Lilac', hex: '#C4ADD4',
-              images: ['assets/capri-lilac-front.jpg', 'assets/capri-lilac-side.jpg', 'assets/capri-lilac-back.jpg'],
-              flat: 'assets/capri-lilac-flat.jpg'
-            },
-            {
-              name: 'Sage Green', hex: '#A9B48B',
-              images: ['assets/capri-sage-front.jpg', 'assets/capri-sage-side.jpg', 'assets/capri-sage-back.jpg'],
-              flat: 'assets/capri-sage-flat.jpg'
-            }
+            { name: 'Cayenne',    hex: '#9C3E32' },
+            { name: 'Lilac',      hex: '#C4ADD4' },
+            { name: 'Sage Green', hex: '#A9B48B' }
           ],
           sizes: ['XS', 'S', 'M', 'L', 'XL'],
           sizeColumns: [
@@ -1268,52 +1049,6 @@
             'Made in India <3',
             'Ethically made, everyone say thank you to my masterji Vikas ji!'
           ]
-        },
-        '3': {
-          name: 'The Allie Set',
-          tagline: 'The Allie Top + Capri Pants. The full set at a sweeter price.',
-          price: '$120',
-          fitNote: "I'm 5'2, wearing a medium. I have a shorter torso, lil tummy, and a DD chest.",
-          defaultColorIndex: 2,
-          colors: [
-            {
-              name: 'Cayenne', hex: '#9C3E32',
-              images: ['assets/set-cayenne-front.jpg', 'assets/set-cayenne-angle.jpg', 'assets/set-cayenne-side.jpg', 'assets/set-cayenne-back.jpg'],
-              flat: 'assets/set-cayenne-flat.jpg'
-            },
-            {
-              name: 'Lilac', hex: '#C4ADD4',
-              images: ['assets/set-lilac-front.jpg', 'assets/set-lilac-angle.jpg', 'assets/set-lilac-side.jpg', 'assets/set-lilac-back.jpg'],
-              flat: 'assets/set-lilac-flat.jpg'
-            },
-            {
-              name: 'Sage Green', hex: '#A9B48B',
-              images: ['assets/set-sage-front.jpg', 'assets/set-sage-angle.jpg', 'assets/set-sage-side.jpg', 'assets/set-sage-back.jpg'],
-              flat: 'assets/set-sage-flat.jpg'
-            }
-          ],
-          sizes: ['XS', 'S', 'M', 'L', 'XL'],
-          sizeColumns: [
-            { label: 'Bust',  key: 'bust' },
-            { label: 'Waist', key: 'waist' },
-            { label: 'Hip',   key: 'hip' }
-          ],
-          sizeChart: [
-            { size: 'XS', bust: '30–32', waist: '24–26', hip: '34–36' },
-            { size: 'S',  bust: '32–34', waist: '26–28', hip: '36–38' },
-            { size: 'M',  bust: '34–36', waist: '28–30', hip: '38–40' },
-            { size: 'L',  bust: '36–38', waist: '30–32', hip: '40–42' },
-            { size: 'XL', bust: '38–40', waist: '32–34', hip: '42–44' }
-          ],
-          bullets: [
-            'Both pieces — top + capri pants',
-            'Save $40 vs buying separately',
-            'Built-in sports bra in the top, mid/low waist on the pants',
-            '95% cotton 5% natural elastane',
-            'Washer and dryer friendly ofc',
-            'Made in India <3',
-            'Ethically made, everyone say thank you to my masterji Vikas ji!'
-          ]
         }
       };
 
@@ -1325,18 +1060,13 @@
         const swatches = card.querySelectorAll('.swatch');
         const imageLabel = card.querySelector('.product-image .img-label');
 
-        const cardImg = card.querySelector('.product-image img');
         swatches.forEach((s, i) => {
           s.addEventListener('click', (e) => {
             e.stopPropagation();
             swatches.forEach(x => x.classList.remove('is-active'));
             s.classList.add('is-active');
-            const color = product.colors[i];
-            if (cardImg && color.images && color.images[0]) {
-              cardImg.src = color.images[0];
-            }
             if (imageLabel) {
-              imageLabel.textContent = `${product.name.toLowerCase()} — ${color.name.toLowerCase()}`;
+              imageLabel.textContent = `${product.name.toLowerCase()} — ${product.colors[i].name.toLowerCase()}`;
             }
           });
         });
@@ -1374,8 +1104,6 @@
       const modalTagline = modal.querySelector('[data-modal-tagline]');
       const modalFitNote = modal.querySelector('[data-modal-fit-note]');
       const modalBullets = modal.querySelector('[data-modal-bullets]');
-      const modalFlat = modal.querySelector('[data-modal-flat]');
-      const modalFlatImg = modal.querySelector('[data-modal-flat-img]');
 
       let carouselIndex = 0;
       let carouselImages = [];
@@ -1407,38 +1135,14 @@
       function renderColor(product, index) {
         const color = product.colors[index];
         modalColorName.textContent = color.name;
-        modalSwatches.querySelectorAll('.swatch').forEach((s, i) => {
-          s.classList.toggle('is-active', i === index);
-        });
-
-        if (color.flat) {
-          modalFlatImg.src = color.flat;
-          modalFlat.hidden = false;
-        } else {
-          modalFlat.hidden = true;
-        }
-
-        const imgs = (color.images && color.images.length) ? color.images : (product.images || []);
-        if (imgs.length) {
-          carouselImages = imgs;
-          modalImageImg.hidden = false;
-          modalImageLabel.hidden = true;
-          modalImage.style.background = '';
-          carouselPrev.hidden = imgs.length <= 1;
-          carouselNext.hidden = imgs.length <= 1;
-          carouselCounter.hidden = imgs.length <= 1;
-          renderCarousel(0);
-        } else {
-          carouselImages = [];
-          modalImageImg.hidden = true;
-          modalImageLabel.hidden = false;
+        if (!product.images) {
           modalImage.style.background = color.hex;
           modalImageLabel.textContent = `${product.name.toLowerCase()} — ${color.name.toLowerCase()}`;
           modalImageLabel.style.color = isLight(color.hex) ? '#002C39' : '#EDE8E0';
-          carouselPrev.hidden = true;
-          carouselNext.hidden = true;
-          carouselCounter.hidden = true;
         }
+        modalSwatches.querySelectorAll('.swatch').forEach((s, i) => {
+          s.classList.toggle('is-active', i === index);
+        });
       }
 
       function openModal(productId) {
@@ -1474,11 +1178,28 @@
           modalBullets.hidden = true;
         }
 
+        if (product.images && product.images.length) {
+          carouselImages = product.images;
+          modalImageImg.hidden = false;
+          modalImageLabel.hidden = true;
+          modalImage.style.background = '';
+          carouselPrev.hidden = product.images.length <= 1;
+          carouselNext.hidden = product.images.length <= 1;
+          carouselCounter.hidden = product.images.length <= 1;
+          renderCarousel(0);
+        } else {
+          carouselImages = [];
+          modalImageImg.hidden = true;
+          modalImageLabel.hidden = false;
+          carouselPrev.hidden = true;
+          carouselNext.hidden = true;
+          carouselCounter.hidden = true;
+        }
 
         modalSwatches.innerHTML = '';
         product.colors.forEach((c, i) => {
           const b = document.createElement('button');
-          b.className = 'swatch';
+          b.className = 'swatch' + (i === 0 ? ' is-active' : '');
           b.style.background = c.hex;
           b.setAttribute('aria-label', c.name);
           b.addEventListener('click', () => renderColor(product, i));
@@ -1510,7 +1231,7 @@
           modalSizeChart.appendChild(tr);
         });
 
-        renderColor(product, product.defaultColorIndex || 0);
+        renderColor(product, 0);
 
         modal.hidden = false;
         document.body.classList.add('modal-open');
