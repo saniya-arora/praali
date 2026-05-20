@@ -7,7 +7,9 @@
 {%- assign color_option = product.options_by_name[color_option_name] -%}
 {%- assign default_variant = product.selected_or_first_available_variant -%}
 
-<article class="product-card" data-product="{{ product.id }}">
+<article class="product-card"
+         data-product="{{ idx }}"
+         data-variants='{{ product.variants | json | escape }}'>
   <button class="product-image" data-modal-open="{{ idx }}" aria-label="View {{ product.title }} details">
     {%- if default_variant.featured_image -%}
       <img src="{{ default_variant.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" />
@@ -28,7 +30,11 @@
           {%- when 'sage-green' or 'sage' -%}{% assign hex = '#A9B48B' %}
           {%- else -%}{% assign hex = '#A9B48B' %}
         {%- endcase -%}
-        <button class="swatch{% if forloop.last %} is-active{% endif %}" data-color="{{ forloop.index0 }}" style="background: {{ hex }};" aria-label="{{ value }}"></button>
+        <button class="swatch{% if forloop.last %} is-active{% endif %}"
+                data-color="{{ forloop.index0 }}"
+                data-value="{{ value }}"
+                style="background: {{ hex }};"
+                aria-label="{{ value }}"></button>
       {%- endfor -%}
     </div>
   {%- endif -%}
@@ -42,14 +48,14 @@
       <span class="card-section-label">Size</span>
       <div class="size-options" data-card-sizes>
         {%- for value in size_option.values -%}
-          <button class="size-option">{{ value }}</button>
+          <button class="size-option" data-value="{{ value }}">{{ value }}</button>
         {%- endfor -%}
       </div>
     </div>
   {%- endif -%}
 
   <div class="product-actions">
-    <button class="btn btn-primary" type="button" data-buy-now="{{ default_variant.id }}">Buy Now</button>
+    <button class="btn btn-primary" type="button" data-buy-now>Buy Now</button>
   </div>
   <button class="details-link" data-modal-open="{{ idx }}">View details</button>
 </article>

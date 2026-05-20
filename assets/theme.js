@@ -216,10 +216,14 @@
         document.body.classList.remove('modal-open');
       }
 
+      /* Track which product card opened the modal (used for Buy Now) */
+      let activeCardEl = null;
+
       document.querySelectorAll('[data-modal-open]').forEach(el => {
         el.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
+          activeCardEl = el.closest('.product-card');
           openModal(el.dataset.modalOpen);
         });
       });
@@ -231,6 +235,70 @@
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modal.hidden) closeModal();
       });
+
+      /* BUY NOW — resolve Shopify variant and redirect to checkout */
+      function getCardVariants(card) {
+        if (!card) return null;
+        const raw = card.getAttribute('data-variants');
+        if (!raw) return null;
+        try { return JSON.parse(raw); } catch (e) { return null; }
+      }
+
+      function getActiveValue(scope, selector) {
+        const el = scope && scope.querySelector(selector + '.is-active');
+        if (!el) return null;
+        return (el.getAttribute('data-value') || el.getAttribute('aria-label') || el.textContent || '').trim();
+      }
+
+      function findVariant(variants, color, size) {
+        if (!variants || !variants.length) return null;
+        return variants.find(v => {
+          const opts = (v.options || []).map(o => (o || '').toString());
+          if (color && !opts.includes(color)) return false;
+          if (size && !opts.includes(size)) return false;
+          return true;
+        }) || null;
+      }
+
+      function buyNowFromCard(card, color, size) {
+        const variants = getCardVariants(card);
+        if (!variants) {
+          alert('This is a demo product. Configure real products in Shopify to enable checkout.');
+          return;
+        }
+        const chosenColor = color || getActiveValue(card, '.swatch');
+        const chosenSize = size || getActiveValue(card, '.size-option');
+        if (!chosenSize && card.querySelector('.size-option')) {
+          alert('Please pick a size.');
+          return;
+        }
+        const variant = findVariant(variants, chosenColor, chosenSize) || variants[0];
+        if (!variant || !variant.available) {
+          alert('That option isn\'t available right now.');
+          return;
+        }
+        window.location.href = '/cart/' + variant.id + ':1';
+      }
+
+      document.querySelectorAll('.product-card [data-buy-now]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const card = btn.closest('.product-card');
+          buyNowFromCard(card);
+        });
+      });
+
+      const modalBuyBtn = modal.querySelector('[data-modal-buy]');
+      if (modalBuyBtn) {
+        modalBuyBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (!activeCardEl) return;
+          const modalColor = getActiveValue(modal, '.modal-swatches .swatch');
+          const modalSize = getActiveValue(modal, '[data-modal-sizes] .size-option');
+          buyNowFromCard(activeCardEl, modalColor, modalSize);
+        });
+      }
 
       /* HERO CAROUSEL */
       const heroSlides = document.querySelectorAll('.hero-slide');
