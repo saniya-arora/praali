@@ -4,7 +4,8 @@
     "theme_name": "Praali",
     "theme_version": "0.1.0",
     "theme_author": "Praali",
-    "theme_documentation_url": "https://github.com/saniya-arora/praali"
+    "theme_documentation_url": "https://github.com/saniya-arora/praali",
+    "theme_support_url": "https://github.com/saniya-arora/praali/issues"
   },
   {
     "name": "Colors",
