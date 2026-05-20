@@ -5,10 +5,12 @@
       {{ section.settings.body }}
     </div>
     <div class="about-image">
-      {%- if section.settings.video -%}
-        <video src="{{ section.settings.video }}" autoplay muted loop playsinline></video>
+      {%- if section.settings.video_url != blank -%}
+        <video src="{{ section.settings.video_url }}" autoplay muted loop playsinline></video>
+      {%- elsif section.settings.fallback_image != blank -%}
+        <img src="{{ section.settings.fallback_image | image_url: width: 1200 }}" alt="">
       {%- else -%}
-        <video src="{{ 'mission.mov' | asset_url }}" autoplay muted loop playsinline></video>
+        <img src="{{ 'hero-main.jpg' | asset_url }}" alt="">
       {%- endif -%}
     </div>
   </div>
@@ -25,7 +27,16 @@
       "label": "Body",
       "default": "<p>Did you know Yoga comes from India? Yet, all major Yoga clothing companies are owned by 50-year-old white men who create organ-crushing, latex-like \"Yoga clothes\" for women.</p><p>Praali invites you to the Yoga of centuries ago… with a modern twist!</p><p>Ethically made from organic materials and inspired by Indian silhouettes and craftsmanship, our clothes are designed for all bodies and lifestyles. From your yoga class to a night out, Praali embraces your multitudes.</p><p>Made in India, to support and center the roots of yoga.</p><p>From me and mine, to you and yours.</p>"
     },
-    { "type": "url", "id": "video", "label": "Video URL (optional, defaults to mission.mov asset)" }
+    {
+      "type": "header",
+      "content": "Video"
+    },
+    {
+      "type": "paragraph",
+      "content": "Upload mission.mov to Shopify Files (Settings → Files), copy the public URL, and paste it below. Or pick a fallback image if you don't have a video yet."
+    },
+    { "type": "url", "id": "video_url", "label": "Video URL (paste from Shopify Files)" },
+    { "type": "image_picker", "id": "fallback_image", "label": "Fallback image (used if no video URL)" }
   ],
   "presets": [{ "name": "Our Mission" }]
 }
