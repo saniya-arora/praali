@@ -63,17 +63,17 @@
       align-items: center;
       text-decoration: none;
     }
-    .brand-mark img { height: 28px; width: auto; display: block; }
+    .brand-mark img { height: 38px; width: auto; display: block; }
 
     .brand-wordmark {
       justify-self: center;
       font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", "Times New Roman", serif;
-      font-size: 22px;
-      letter-spacing: 0.45em;
+      font-size: 28px;
+      letter-spacing: 0.42em;
       color: #5C6B4B;
       text-decoration: none;
       font-weight: 500;
-      padding-left: 0.45em;
+      padding-left: 0.42em;
     }
 
     .site-header .nav a,
@@ -128,14 +128,13 @@
     .hero-overlay {
       position: absolute;
       bottom: 56px;
-      left: 50%;
-      transform: translateX(-50%);
+      right: 56px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 22px;
+      align-items: flex-end;
+      gap: 18px;
       z-index: 2;
-      text-align: center;
+      text-align: right;
     }
 
     .hero-tagline {
@@ -448,10 +447,10 @@
     .product-aside {
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
-      justify-content: flex-end;
-      gap: 14px;
-      padding: 24px 8px 24px 60px;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 24px 8px;
     }
 
     .speech-bubble {
@@ -481,7 +480,7 @@
     }
 
     .character-illustration {
-      width: 200px;
+      width: 240px;
       height: auto;
       display: block;
       object-fit: contain;
@@ -581,9 +580,9 @@
 
     .btn {
       flex: 1;
-      padding: 14px 16px;
-      font-size: 13px;
-      letter-spacing: 0.18em;
+      padding: 16px 18px;
+      font-size: 16px;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       border-radius: 999px;
       cursor: pointer;
@@ -611,28 +610,16 @@
     .btn-secondary:hover { background: var(--ink); color: var(--highlight); }
 
     .about {
-      padding: 110px 0 110px;
-      background: var(--brand-green-light);
+      padding: 120px 0 120px;
+      background-color: var(--brand-green-light);
+      background-image: url('mission-banner.png');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      background-position: center;
       color: var(--bg);
       position: relative;
       z-index: 1;
     }
-
-    .about::before,
-    .about::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 36px;
-      background-image: url('assets/border-horizontal.png');
-      background-repeat: repeat-x;
-      background-size: auto 100%;
-      background-position: left center;
-      pointer-events: none;
-    }
-    .about::before { top: 0; }
-    .about::after { bottom: 0; }
 
     .about-grid {
       gap: 64px;
@@ -660,13 +647,21 @@
       align-items: center;
     }
     .about-text h2 {
-      font-size: 28px;
-      letter-spacing: 0.1em;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", "Times New Roman", serif;
+      font-size: 40px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      margin-bottom: 20px;
+      margin-bottom: 28px;
       color: var(--bg);
+      font-weight: 500;
     }
-    .about-text p { color: var(--bg); margin-bottom: 14px; font-size: 15px; opacity: 0.95; }
+    .about-text p {
+      color: var(--bg);
+      margin-bottom: 18px;
+      font-size: 17px;
+      line-height: 1.65;
+      opacity: 0.96;
+    }
 
     .about-image {
       background: var(--placeholder);
@@ -702,8 +697,8 @@
     .modal-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0, 44, 57, 0.55);
-      backdrop-filter: blur(2px);
+      background: rgba(237, 232, 224, 0.78);
+      backdrop-filter: blur(4px);
     }
     .modal-content {
       position: relative;
@@ -730,7 +725,12 @@
     }
     .modal-close:hover { color: var(--sage-deep); }
 
-    .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    .modal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      align-items: stretch;
+    }
     .modal-image-col {
       display: flex;
       flex-direction: column;
@@ -747,16 +747,18 @@
       position: relative;
       overflow: hidden;
       border-radius: var(--radius);
+      flex: 0 0 auto;
     }
 
     .modal-flat {
       background: var(--bg);
-      aspect-ratio: 4 / 3;
       overflow: hidden;
       border-radius: var(--radius);
       display: flex;
       align-items: center;
       justify-content: center;
+      flex: 1 1 auto;
+      min-height: 240px;
     }
 
     .modal-flat[hidden] { display: none; }
@@ -985,28 +987,36 @@
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
-      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
-      font-size: 12px;
-      color: var(--brand-green);
-      background: rgba(255, 255, 255, 0.5);
+      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      color: #4A5C39;
+      background: rgba(244, 240, 226, 0.45);
       border-radius: var(--radius);
       overflow: hidden;
     }
     .size-chart th, .size-chart td {
       text-align: left;
-      padding: 10px 14px;
-      letter-spacing: 0.1em;
+      padding: 16px 20px;
     }
     .size-chart thead tr {
-      background: rgba(138, 165, 114, 0.18);
+      background: rgba(176, 168, 142, 0.45);
     }
     .size-chart th {
       font-weight: 500;
       text-transform: uppercase;
-      color: var(--brand-green);
+      color: #4A5C39;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+    }
+    .size-chart tbody td {
+      color: #4A5C39;
+      letter-spacing: 0.04em;
+    }
+    .size-chart tbody td:first-child {
+      font-weight: 500;
     }
     .size-chart tbody tr + tr td {
-      border-top: 1px solid rgba(138, 165, 114, 0.25);
+      border-top: 1px solid rgba(74, 92, 57, 0.2);
     }
 
     .modal-facts { list-style: none; padding: 0; font-size: 14px; color: var(--muted); }
@@ -1026,9 +1036,33 @@
     .footer-inner {
       display: flex;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: space-between;
+      gap: 24px;
       max-width: none;
     }
+    .footer-social {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .footer-icon {
+      color: var(--brand-green);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s ease;
+    }
+    .footer-icon:hover { color: var(--brand-green-light); }
+    .footer-link {
+      color: var(--brand-green);
+      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      margin-left: 6px;
+    }
+    .footer-link:hover { color: var(--brand-green-light); }
 
     .footer-logo {
       height: 32px;
