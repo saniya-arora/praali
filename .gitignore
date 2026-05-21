@@ -3,3 +3,7 @@ node_modules/
 *.log
 .env
 .env.local
+
+# Static prototype lives on the prototype-archive branch.
+# Kept untracked on main so the repo stays under Shopify's 50MB theme limit.
+prototype/
