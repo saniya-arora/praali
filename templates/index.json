@@ -2,7 +2,19 @@
   "sections": {
     "hero": { "type": "hero", "settings": {} },
     "products": { "type": "featured-products", "settings": {} },
-    "gallery": { "type": "photo-gallery", "settings": {} },
+    "gallery": {
+      "type": "photo-gallery",
+      "blocks": {
+        "p1": { "type": "photo", "settings": { "fallback": "gallery-1.jpg" } },
+        "p2": { "type": "photo", "settings": { "fallback": "gallery-2.jpg" } },
+        "p3": { "type": "photo", "settings": { "fallback": "gallery-3.jpg" } },
+        "p4": { "type": "photo", "settings": { "fallback": "gallery-4.jpg" } },
+        "p5": { "type": "photo", "settings": { "fallback": "gallery-5.jpg" } },
+        "p6": { "type": "photo", "settings": { "fallback": "gallery-6.jpg" } }
+      },
+      "block_order": ["p1", "p2", "p3", "p4", "p5", "p6"],
+      "settings": {}
+    },
     "mission": { "type": "our-mission", "settings": {} }
   },
   "order": ["hero", "products", "gallery", "mission"]
