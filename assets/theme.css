@@ -14,6 +14,7 @@
       --radius-lg: 22px;
       --brand-green: #5C6B4B;
       --brand-green-light: #8AA572;
+      --brand-green-dark: #3F4F32;
       --shadow: 0 2px 12px rgba(0, 44, 57, 0.06);
     }
 
@@ -128,13 +129,14 @@
     .hero-overlay {
       position: absolute;
       bottom: 56px;
-      right: 56px;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
+      align-items: center;
       gap: 18px;
       z-index: 2;
-      text-align: right;
+      text-align: center;
     }
 
     .hero-tagline {
@@ -580,8 +582,8 @@
 
     .btn {
       flex: 1;
-      padding: 16px 18px;
-      font-size: 16px;
+      padding: 14px 18px;
+      font-size: 19px;
       letter-spacing: 0.22em;
       text-transform: uppercase;
       border-radius: 999px;
@@ -623,7 +625,7 @@
 
     .about-grid {
       gap: 64px;
-      max-width: 1100px;
+      max-width: 1360px;
       margin: 0 auto;
     }
 
@@ -642,8 +644,8 @@
     }
     .about-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 64px;
       align-items: center;
     }
     .about-text h2 {
@@ -658,17 +660,19 @@
     .about-text p {
       color: var(--bg);
       margin-bottom: 18px;
-      font-size: 17px;
-      line-height: 1.65;
+      font-size: 18px;
+      line-height: 1.7;
       opacity: 0.96;
+      max-width: 64ch;
     }
 
     .about-image {
       background: var(--placeholder);
       border-radius: var(--radius);
       aspect-ratio: 9 / 16;
-      max-height: 720px;
+      max-height: 580px;
       width: 100%;
+      max-width: 360px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -839,7 +843,7 @@
     }
     .modal-color-label {
       font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
-      color: var(--brand-green);
+      color: var(--brand-green-dark);
       font-size: 11px;
       letter-spacing: 0.16em;
       margin: 0;
@@ -855,24 +859,24 @@
       opacity: 0.85;
     }
 
-    .modal-title { font-size: 30px; letter-spacing: 0.04em; margin-bottom: 0; color: var(--brand-green); font-weight: 500; }
+    .modal-title { font-size: 30px; letter-spacing: 0.04em; margin-bottom: 0; color: var(--brand-green-dark); font-weight: 500; }
     .modal-tagline {
       font-size: 14px;
-      color: var(--brand-green);
+      color: var(--brand-green-dark);
       line-height: 1.6;
       margin-bottom: 14px;
     }
     .modal-tagline[hidden] { display: none; }
     .modal-price {
       font-size: 14px;
-      color: var(--brand-green);
+      color: var(--brand-green-dark);
       font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
       margin: 0;
     }
 
     .modal-fit-note {
       font-size: 14px;
-      color: var(--brand-green);
+      color: var(--brand-green-dark);
       line-height: 1.6;
       margin: 0 0 22px;
     }
@@ -883,7 +887,7 @@
       padding: 0;
       margin: 0 0 22px;
       font-size: 14px;
-      color: var(--brand-green);
+      color: var(--brand-green-dark);
       line-height: 1.7;
     }
     .modal-bullets[hidden] { display: none; }
@@ -917,14 +921,14 @@
 
     .size-options { display: flex; gap: 8px; flex-wrap: wrap; }
     .size-option {
-      padding: 10px 16px;
+      padding: 7px 13px;
       min-width: 44px;
       border: 1px solid var(--brand-green);
       background: var(--bg);
       cursor: pointer;
       border-radius: 999px;
       font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
-      font-size: 13px;
+      font-size: 17px;
       letter-spacing: 0.1em;
       color: var(--brand-green);
       text-align: center;
@@ -939,7 +943,7 @@
 
     .size-chart-desc {
       font-size: 14px;
-      color: var(--brand-green);
+      color: var(--brand-green-dark);
       line-height: 1.55;
       margin-bottom: 12px;
     }
@@ -947,7 +951,7 @@
     .size-chart-unit {
       font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
       font-size: 11px;
-      color: var(--brand-green);
+      color: var(--brand-green-dark);
       letter-spacing: 0.16em;
       margin-bottom: 12px;
     }
@@ -961,14 +965,14 @@
       font-size: 15px;
       letter-spacing: 0.04em;
       margin-bottom: 8px;
-      color: var(--brand-green);
+      color: var(--brand-green-dark);
       font-weight: 500;
     }
 
     .size-chart-footer p {
       font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
       font-size: 11px;
-      color: var(--brand-green-light);
+      color: var(--brand-green);
       line-height: 1.7;
       letter-spacing: 0.12em;
     }
