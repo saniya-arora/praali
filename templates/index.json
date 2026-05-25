@@ -1,21 +1,91 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
-    "hero": { "type": "hero", "settings": {} },
-    "products": { "type": "featured-products", "settings": {} },
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "tagline": "Made where Yoga began.",
+        "cta_text": "PREORDER HERE",
+        "cta_link": ""
+      }
+    },
+    "products": {
+      "type": "featured-products",
+      "settings": {
+        "collection": ""
+      }
+    },
     "gallery": {
       "type": "photo-gallery",
       "blocks": {
-        "p1": { "type": "photo", "settings": { "fallback": "gallery-1.jpg" } },
-        "p2": { "type": "photo", "settings": { "fallback": "gallery-2.jpg" } },
-        "p3": { "type": "photo", "settings": { "fallback": "gallery-3.jpg" } },
-        "p4": { "type": "photo", "settings": { "fallback": "gallery-4.jpg" } },
-        "p5": { "type": "photo", "settings": { "fallback": "gallery-5.jpg" } },
-        "p6": { "type": "photo", "settings": { "fallback": "gallery-6.jpg" } }
+        "p1": {
+          "type": "photo",
+          "settings": {
+            "fallback": "gallery-1.jpg"
+          }
+        },
+        "p2": {
+          "type": "photo",
+          "settings": {
+            "fallback": "gallery-2.jpg"
+          }
+        },
+        "p3": {
+          "type": "photo",
+          "settings": {
+            "fallback": "gallery-3.jpg"
+          }
+        },
+        "p4": {
+          "type": "photo",
+          "settings": {
+            "fallback": "gallery-4.jpg"
+          }
+        },
+        "p5": {
+          "type": "photo",
+          "settings": {
+            "fallback": "gallery-5.jpg"
+          }
+        },
+        "p6": {
+          "type": "photo",
+          "settings": {
+            "fallback": "gallery-6.jpg"
+          }
+        }
       },
-      "block_order": ["p1", "p2", "p3", "p4", "p5", "p6"],
+      "block_order": [
+        "p1",
+        "p2",
+        "p3",
+        "p4",
+        "p5",
+        "p6"
+      ],
       "settings": {}
     },
-    "mission": { "type": "our-mission", "settings": {} }
+    "mission": {
+      "type": "our-mission",
+      "settings": {
+        "heading": "Our Mission",
+        "body": "<p>Did you know Yoga comes from India? Yet, all major Yoga clothing companies are owned by 50-year-old white men who create organ-crushing, latex-like \"Yoga clothes\" for women.</p><p>Praali invites you to the Yoga of centuries ago… with a modern twist!</p><p>Ethically made from organic materials and inspired by Indian silhouettes and craftsmanship, our clothes are designed for all bodies and lifestyles. From your yoga class to a night out, Praali embraces your multitudes.</p><p>Made in India, to support and center the roots of yoga.</p><p>From me and mine, to you and yours.</p>",
+        "video_url": "https://cdn.shopify.com/videos/c/o/v/a561d4e790ae4d36987dee9cf9bd228e.mov"
+      }
+    }
   },
-  "order": ["hero", "products", "gallery", "mission"]
+  "order": [
+    "hero",
+    "products",
+    "gallery",
+    "mission"
+  ]
 }
