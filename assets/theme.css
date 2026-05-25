@@ -617,10 +617,6 @@
     .about {
       padding: 120px 0 120px;
       background-color: var(--brand-green-light);
-      background-image: url('mission-banner.png');
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      background-position: center;
       color: var(--bg);
       position: relative;
       z-index: 1;
