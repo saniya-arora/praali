@@ -38,17 +38,31 @@
 
         const cardSizes = card.querySelector('[data-card-sizes]');
         if (cardSizes) {
-          product.sizes.forEach(size => {
-            const b = document.createElement('button');
-            b.className = 'size-option';
-            b.textContent = size;
-            b.addEventListener('click', (e) => {
-              e.stopPropagation();
-              cardSizes.querySelectorAll('.size-option').forEach(x => x.classList.remove('is-active'));
-              b.classList.add('is-active');
+          // If Liquid already rendered size buttons from real Shopify variants,
+          // just wire up click handlers. Otherwise (placeholder cards),
+          // populate from the hardcoded prototype data.
+          const existingButtons = cardSizes.querySelectorAll('.size-option');
+          if (existingButtons.length > 0) {
+            existingButtons.forEach(btn => {
+              btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                existingButtons.forEach(x => x.classList.remove('is-active'));
+                btn.classList.add('is-active');
+              });
             });
-            cardSizes.appendChild(b);
-          });
+          } else {
+            product.sizes.forEach(size => {
+              const b = document.createElement('button');
+              b.className = 'size-option';
+              b.textContent = size;
+              b.addEventListener('click', (e) => {
+                e.stopPropagation();
+                cardSizes.querySelectorAll('.size-option').forEach(x => x.classList.remove('is-active'));
+                b.classList.add('is-active');
+              });
+              cardSizes.appendChild(b);
+            });
+          }
         }
       });
 
