@@ -453,6 +453,7 @@
       justify-content: center;
       gap: 16px;
       padding: 24px 8px;
+      height: 100%;
     }
 
     .speech-bubble {
@@ -482,10 +483,12 @@
     }
 
     .character-illustration {
-      width: 240px;
+      width: 440px;
+      max-width: 100%;
       height: auto;
       display: block;
       object-fit: contain;
+      margin-bottom: 120px;
     }
 
     .product-image {
