@@ -20,7 +20,7 @@
     "products": {
       "type": "featured-products",
       "settings": {
-        "collection": ""
+        "collection": "homepage-featured"
       }
     },
     "gallery": {
