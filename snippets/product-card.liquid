@@ -39,7 +39,7 @@
     </div>
   {%- endif -%}
 
-  <h3 class="product-name">{{ product.title }}</h3>
+  <h3 class="product-name" data-modal-open="{{ idx }}" role="button" tabindex="0">{{ product.title }}</h3>
   <p class="product-price">{{ default_variant.price | money }}</p>
 
   {%- assign size_option = product.options_by_name['Size'] -%}
@@ -55,7 +55,8 @@
   {%- endif -%}
 
   <div class="product-actions">
-    <button class="btn btn-primary" type="button" data-buy-now>Buy Now</button>
+    <button class="btn btn-primary" type="button" data-add-to-cart>Add to Cart</button>
+    <button class="btn btn-secondary" type="button" data-buy-now>Buy Now</button>
   </div>
   <button class="details-link" data-modal-open="{{ idx }}">View details</button>
 </article>

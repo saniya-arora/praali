@@ -1,30 +1,54 @@
-<section class="products" style="padding: 120px 0 64px;">
-  <div class="container" style="max-width: 800px;">
-    <h2 class="modal-title">Your cart</h2>
-
+<section class="cart-page">
+  <div class="cart-page-inner">
     {%- if cart.item_count == 0 -%}
-      <p class="modal-tagline">Your cart is empty.</p>
-      <a href="{{ routes.root_url }}" class="btn btn-primary" style="display: inline-block; padding: 14px 28px; text-align: center; margin-top: 16px;">Continue shopping</a>
+      <h1 class="cart-title">Your Cart</h1>
+      <div class="cart-empty">
+        <p>Your cart is empty.</p>
+        <a href="{{ routes.root_url }}" class="btn btn-primary">Continue shopping</a>
+      </div>
     {%- else -%}
+      <h1 class="cart-title">Your Cart</h1>
+      <p class="cart-subtitle">{{ cart.item_count }}{% if cart.item_count == 1 %} item{% else %} items{% endif %}</p>
+
       <form action="{{ routes.cart_url }}" method="post" novalidate>
-        <ul style="list-style: none; padding: 0; margin: 0;">
+        <div class="cart-items">
           {%- for item in cart.items -%}
-            <li style="display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line);">
-              {%- if item.image -%}
-                <img src="{{ item.image | image_url: width: 160 }}" alt="" style="width: 80px; height: auto; border-radius: 8px;" />
-              {%- endif -%}
-              <div style="flex: 1;">
-                <h4 style="margin: 0; color: var(--brand-green);">{{ item.product.title }}</h4>
-                <p style="margin: 4px 0; color: var(--brand-green);">{{ item.variant.title }}</p>
-                <p style="margin: 4px 0; color: var(--brand-green);">{{ item.final_line_price | money }}</p>
-                <a href="{{ item.url_to_remove }}" style="color: var(--brand-green-light); font-size: 12px;">Remove</a>
+            <div class="cart-item" data-cart-item="{{ item.key }}">
+              <div class="cart-item-image">
+                {%- if item.image -%}
+                  <a href="{{ item.url }}"><img src="{{ item.image | image_url: width: 320 }}" alt="{{ item.product.title | escape }}" /></a>
+                {%- endif -%}
               </div>
-            </li>
+              <div class="cart-item-info">
+                <h3><a href="{{ item.url }}" style="color: inherit; text-decoration: none;">{{ item.product.title }}</a></h3>
+                {%- unless item.variant.title == 'Default Title' -%}
+                  <p class="cart-item-variant">{{ item.variant.title }}</p>
+                {%- endunless -%}
+                <p class="cart-item-price">{{ item.original_price | money }}</p>
+                <a href="{{ item.url_to_remove }}" class="cart-item-remove" data-cart-remove="{{ item.key }}">Remove</a>
+              </div>
+              <div class="qty-stepper" data-qty>
+                <button type="button" aria-label="Decrease quantity" data-qty-dec>−</button>
+                <input type="number" name="updates[{{ item.key }}]" value="{{ item.quantity }}" min="0" aria-label="Quantity" />
+                <button type="button" aria-label="Increase quantity" data-qty-inc>+</button>
+              </div>
+              <div class="cart-item-line-total" data-line-total>{{ item.final_line_price | money }}</div>
+            </div>
           {%- endfor -%}
-        </ul>
-        <div style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center;">
-          <p style="color: var(--brand-green); font-size: 18px;">Subtotal: {{ cart.total_price | money }}</p>
-          <button type="submit" name="checkout" class="btn btn-primary">Check out</button>
+        </div>
+
+        <div class="cart-summary">
+          <p class="cart-summary-note">Shipping and taxes calculated at checkout.</p>
+          <div class="cart-totals">
+            <div class="cart-totals-row">
+              <span class="cart-totals-label">Subtotal</span>
+              <span class="cart-totals-value" data-cart-subtotal>{{ cart.total_price | money }}</span>
+            </div>
+          </div>
+          <div class="cart-actions">
+            <a href="{{ routes.root_url }}" class="btn btn-secondary">Continue shopping</a>
+            <button type="submit" name="checkout" class="btn btn-primary">Check out</button>
+          </div>
         </div>
       </form>
     {%- endif -%}
