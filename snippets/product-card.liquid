@@ -30,7 +30,7 @@
           {%- when 'sage-green' or 'sage' -%}{% assign hex = '#A9B48B' %}
           {%- else -%}{% assign hex = '#A9B48B' %}
         {%- endcase -%}
-        <button class="swatch{% if forloop.last %} is-active{% endif %}"
+        <button class="swatch{% if value == color_option.selected_value %} is-active{% endif %}"
                 data-color="{{ forloop.index0 }}"
                 data-value="{{ value }}"
                 style="background: {{ hex }};"
