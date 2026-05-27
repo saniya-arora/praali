@@ -64,6 +64,7 @@
         "p6": {
           "type": "photo",
           "settings": {
+            "image": "shopify://shop_images/Mowgli.jpg",
             "fallback": "gallery-6.jpg"
           }
         }
