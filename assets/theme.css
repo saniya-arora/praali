@@ -1305,6 +1305,26 @@
       color: var(--brand-green-dark);
       font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
     }
+    .cart-preorder-note {
+      grid-column: 1 / -1;
+      background: rgba(138, 165, 114, 0.18);
+      border-left: 3px solid var(--brand-green);
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      color: var(--brand-green-dark);
+      line-height: 1.55;
+      margin-top: 16px;
+    }
+    .cart-preorder-note strong {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--brand-green-dark);
+      margin-right: 6px;
+    }
+
     .cart-actions {
       grid-column: 1 / -1;
       display: flex;
