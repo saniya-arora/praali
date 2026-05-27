@@ -57,7 +57,7 @@
         "p5": {
           "type": "photo",
           "settings": {
-            "image": "shopify://shop_images/reading_1.jpg",
+            "image": "shopify://shop_images/reading_fr.jpg",
             "fallback": "gallery-5.jpg"
           }
         },
