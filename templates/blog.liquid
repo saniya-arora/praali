@@ -1,0 +1,47 @@
+{% paginate blog.articles by 10 %}
+  <section class="blog-page">
+    <div class="blog-inner">
+      <h1 class="blog-title">{{ blog.title }}</h1>
+
+      {%- if blog.articles.size == 0 -%}
+        <p class="blog-empty">No articles yet — check back soon.</p>
+      {%- else -%}
+        <div class="blog-articles">
+          {%- for article in blog.articles -%}
+            <article class="blog-article-card">
+              {%- if article.image -%}
+                <a href="{{ article.url }}" class="blog-article-image" aria-label="{{ article.title | escape }}">
+                  <img src="{{ article.image | image_url: width: 900 }}" alt="{{ article.image.alt | default: article.title | escape }}" />
+                </a>
+              {%- endif -%}
+              <div class="blog-article-info">
+                <p class="blog-article-meta">
+                  <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%B %-d, %Y' }}</time>
+                </p>
+                <h2 class="blog-article-title">
+                  <a href="{{ article.url }}">{{ article.title }}</a>
+                </h2>
+                {%- if article.excerpt_or_content != blank -%}
+                  <p class="blog-article-excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 32 }}</p>
+                {%- endif -%}
+                <a href="{{ article.url }}" class="blog-article-link">Read more →</a>
+              </div>
+            </article>
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="blog-pagination" role="navigation" aria-label="Pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="blog-pagination-link">← {{ paginate.previous.title }}</a>
+            {%- endif -%}
+            <span class="blog-pagination-info">Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="blog-pagination-link">{{ paginate.next.title }} →</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </section>
+{% endpaginate %}

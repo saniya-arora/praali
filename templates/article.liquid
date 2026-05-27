@@ -1,0 +1,39 @@
+<article class="article-page">
+  <div class="article-inner">
+    <a href="{{ blog.url }}" class="article-back-link">← Back to {{ blog.title }}</a>
+
+    <h1 class="article-title">{{ article.title }}</h1>
+
+    <p class="article-meta">
+      {%- if article.author != blank -%}
+        <span class="article-author">{{ article.author }}</span>
+      {%- endif -%}
+      {%- if article.published_at -%}
+        {% if article.author != blank %} · {% endif %}
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}">{{ article.published_at | date: '%B %-d, %Y' }}</time>
+      {%- endif -%}
+    </p>
+
+    {%- if article.image -%}
+      <div class="article-image">
+        <img src="{{ article.image | image_url: width: 1400 }}" alt="{{ article.image.alt | default: article.title | escape }}" />
+      </div>
+    {%- endif -%}
+
+    <div class="article-content rte">
+      {{ article.content }}
+    </div>
+
+    {%- if article.tags.size > 0 -%}
+      <ul class="article-tags">
+        {%- for tag in article.tags -%}
+          <li><a href="{{ blog.url }}/tagged/{{ tag | handleize }}">#{{ tag }}</a></li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    <div class="article-footer">
+      <a href="{{ blog.url }}" class="article-back-link">← All {{ blog.title }}</a>
+    </div>
+  </div>
+</article>
