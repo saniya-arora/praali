@@ -36,18 +36,21 @@
         "p2": {
           "type": "photo",
           "settings": {
+            "image": "shopify://shop_images/260510-163549-remove_the_white_box_on_the_right_side_next_to_the.jpg",
             "fallback": "gallery-2.jpg"
           }
         },
         "p3": {
           "type": "photo",
           "settings": {
+            "image": "shopify://shop_images/IMG_6898.jpg",
             "fallback": "gallery-3.jpg"
           }
         },
         "p4": {
           "type": "photo",
           "settings": {
+            "image": "shopify://shop_images/IMG_6939.jpg",
             "fallback": "gallery-4.jpg"
           }
         },
