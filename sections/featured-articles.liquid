@@ -1,0 +1,58 @@
+{%- assign articles_blog = blogs[section.settings.blog] -%}
+
+<section class="featured-articles">
+  <div class="featured-articles-inner">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="featured-articles-heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if articles_blog != blank and articles_blog.articles.size > 0 -%}
+      <div class="featured-articles-grid">
+        {%- for article in articles_blog.articles limit: section.settings.articles_to_show -%}
+          <article class="featured-article-card">
+            <a href="{{ article.url }}" class="featured-article-image" aria-label="{{ article.title | escape }}">
+              {%- if article.image -%}
+                <img src="{{ article.image | image_url: width: 900 }}" alt="{{ article.image.alt | default: article.title | escape }}" />
+              {%- endif -%}
+            </a>
+            <h3 class="featured-article-title">
+              <a href="{{ article.url }}">{{ article.title }}</a>
+            </h3>
+            <a href="{{ article.url }}" class="featured-article-link">Read more →</a>
+          </article>
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <p class="featured-articles-empty">Articles coming soon.</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured articles",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "From the Journal"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog to pull articles from"
+    },
+    {
+      "type": "range",
+      "id": "articles_to_show",
+      "label": "Articles to show",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3
+    }
+  ],
+  "presets": [{ "name": "Featured articles" }]
+}
+{% endschema %}

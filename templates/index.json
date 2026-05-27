@@ -81,9 +81,13 @@
         "video_url": "https://cdn.shopify.com/videos/c/o/v/a561d4e790ae4d36987dee9cf9bd228e.mov"
       }
     },
-    "1779850583ef293018": {
-      "type": "_blocks",
-      "settings": {}
+    "articles": {
+      "type": "featured-articles",
+      "settings": {
+        "heading": "From the Journal",
+        "blog": "news",
+        "articles_to_show": 3
+      }
     }
   },
   "order": [
@@ -91,6 +95,6 @@
     "products",
     "gallery",
     "mission",
-    "1779850583ef293018"
+    "articles"
   ]
 }
