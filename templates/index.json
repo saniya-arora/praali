@@ -29,6 +29,7 @@
         "p1": {
           "type": "photo",
           "settings": {
+            "image": "shopify://shop_images/purple_garden_set_1.jpg",
             "fallback": "gallery-1.jpg"
           }
         },
@@ -85,7 +86,7 @@
       "type": "featured-articles",
       "settings": {
         "heading": "",
-        "blog": "news",
+        "blog": "journal",
         "articles_to_show": 3
       }
     }
