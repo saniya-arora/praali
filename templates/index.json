@@ -29,36 +29,42 @@
         "p1": {
           "type": "photo",
           "settings": {
+            "image": "shopify://shop_images/purple_garden_set_1.jpg",
             "fallback": "gallery-1.jpg"
           }
         },
         "p2": {
           "type": "photo",
           "settings": {
+            "image": "shopify://shop_images/260510-163549-remove_the_white_box_on_the_right_side_next_to_the.jpg",
             "fallback": "gallery-2.jpg"
           }
         },
         "p3": {
           "type": "photo",
           "settings": {
+            "image": "shopify://shop_images/IMG_6898.jpg",
             "fallback": "gallery-3.jpg"
           }
         },
         "p4": {
           "type": "photo",
           "settings": {
+            "image": "shopify://shop_images/IMG_6939.jpg",
             "fallback": "gallery-4.jpg"
           }
         },
         "p5": {
           "type": "photo",
           "settings": {
+            "image": "shopify://shop_images/reading_1.jpg",
             "fallback": "gallery-5.jpg"
           }
         },
         "p6": {
           "type": "photo",
           "settings": {
+            "image": "shopify://shop_images/Mowgli.jpg",
             "fallback": "gallery-6.jpg"
           }
         }
