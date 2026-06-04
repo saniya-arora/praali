@@ -81,6 +81,10 @@
     },
     "mission": {
       "type": "our-mission",
+      "custom_css": [
+        "* {box-sizing: border-box;}",
+        "@media screen and (max-width: 749px) {.page-width, .rich-text, .rich-text__blocks, .section, div {max-width: 100%; } p {white-space: normal; overflow-wrap: break-word; word-break: normal; max-width: 100%; letter-spacing: 0.02em; line-height: 1.55; } h2 {font-size: 32px; letter-spacing: 0.08em; line-height: 1.1; }}"
+      ],
       "settings": {
         "heading": "Our Mission",
         "body": "<p>Did you know Yoga comes from India? Yet, all major Yoga clothing companies are owned by 50-year-old white men who create organ-crushing, latex-like \"Yoga clothes\" for women.</p><p>Praali invites you to the Yoga of centuries ago… with a modern twist!</p><p>Ethically made and inspired by Indian silhouettes and craftsmanship, our clothes are designed for all bodies and lifestyles. From your yoga class to a night out, Praali embraces your multitudes.</p><p>Made in India, to support and center the roots of yoga.</p><p>From me and mine, to you and yours.</p>",
