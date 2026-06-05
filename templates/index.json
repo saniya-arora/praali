@@ -98,6 +98,15 @@
         "blog": "journal",
         "articles_to_show": 3
       }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Stay in the loop",
+        "body": "Add your email to stay in the loop with Praali.",
+        "placeholder": "your@email.com",
+        "button_text": "Sign up"
+      }
     }
   },
   "order": [
@@ -105,6 +114,7 @@
     "products",
     "gallery",
     "mission",
-    "articles"
+    "articles",
+    "newsletter"
   ]
 }
