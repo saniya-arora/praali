@@ -26,6 +26,13 @@
     "gallery": {
       "type": "photo-gallery",
       "blocks": {
+        "photo_mwBD68": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/set-sage-front.jpg",
+            "fallback": "gallery-1.jpg"
+          }
+        },
         "p1": {
           "type": "photo",
           "settings": {
@@ -47,11 +54,25 @@
             "fallback": "gallery-3.jpg"
           }
         },
+        "photo_nTtBgB": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/set-lilac-front.jpg",
+            "fallback": "gallery-1.jpg"
+          }
+        },
         "p4": {
           "type": "photo",
           "settings": {
             "image": "shopify://shop_images/IMG_6939.jpg",
             "fallback": "gallery-4.jpg"
+          }
+        },
+        "photo_9rbXmb": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/set-cayenne-front.jpg",
+            "fallback": "gallery-1.jpg"
           }
         },
         "p5": {
@@ -70,10 +91,13 @@
         }
       },
       "block_order": [
+        "photo_mwBD68",
         "p1",
         "p2",
         "p3",
+        "photo_nTtBgB",
         "p4",
+        "photo_9rbXmb",
         "p5",
         "p6"
       ],
