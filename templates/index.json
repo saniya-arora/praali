@@ -102,8 +102,8 @@
     "newsletter": {
       "type": "newsletter",
       "settings": {
-        "heading": "Stay in the loop",
-        "body": "Add your email to stay in the loop with Praali.",
+        "heading": "Become a Praali girlie",
+        "body": "Be the first to hear about new collections, events, and behind-the-scenes updates.",
         "placeholder": "your@email.com",
         "button_text": "Sign up"
       }
