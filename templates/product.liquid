@@ -33,7 +33,11 @@
           {%- endif -%}
 
           <div class="modal-actions">
-            <button type="submit" class="btn btn-primary">Buy Now</button>
+            {%- if product.available -%}
+              <button type="submit" class="btn btn-primary" name="add">{{ 'products.product.buy_now' | t }}</button>
+            {%- else -%}
+              <button type="button" class="btn btn-primary is-sold-out" disabled aria-disabled="true">{{ 'products.product.sold_out' | t }}</button>
+            {%- endif -%}
           </div>
         {%- endform -%}
       </div>

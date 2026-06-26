@@ -631,6 +631,19 @@
       border-color: var(--brand-green);
     }
 
+    .btn:disabled,
+    .btn.is-sold-out {
+      opacity: 0.55;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .btn-primary.is-sold-out:hover {
+      background: var(--brand-green-light);
+      color: var(--brand-green);
+      border-color: var(--brand-green-light);
+    }
+
     .cart-toast {
       position: fixed;
       top: 80px;
@@ -975,6 +988,19 @@
       border-color: var(--ink);
       background: var(--ink);
       color: var(--highlight);
+    }
+
+    .size-option.is-unavailable {
+      opacity: 0.4;
+      text-decoration: line-through;
+      cursor: not-allowed;
+    }
+
+    .size-option.is-unavailable:hover,
+    .size-option.is-unavailable.is-active {
+      border-color: var(--brand-green);
+      background: var(--bg);
+      color: var(--brand-green);
     }
 
     .modal-actions { display: flex; gap: 8px; margin: 24px 0 28px; }

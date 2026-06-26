@@ -190,7 +190,10 @@
           b.className = 'swatch';
           b.style.background = c.hex;
           b.setAttribute('aria-label', c.name);
-          b.addEventListener('click', () => renderColor(product, i));
+          b.addEventListener('click', () => {
+            renderColor(product, i);
+            updateModalAvailability();
+          });
           modalSwatches.appendChild(b);
         });
 
@@ -199,9 +202,11 @@
           const b = document.createElement('button');
           b.className = 'size-option';
           b.textContent = size;
+          b.setAttribute('data-value', size);
           b.addEventListener('click', () => {
             modalSizes.querySelectorAll('.size-option').forEach(x => x.classList.remove('is-active'));
             b.classList.add('is-active');
+            updateModalAvailability();
           });
           modalSizes.appendChild(b);
         });
@@ -220,6 +225,7 @@
         });
 
         renderColor(product, product.defaultColorIndex || 0);
+        updateModalAvailability();
 
         modal.hidden = false;
         document.body.classList.add('modal-open');
@@ -281,6 +287,106 @@
         }) || null;
       }
 
+      const LABELS = {
+        add: 'Add to Cart',
+        buy: 'Buy Now',
+        soldOut: 'Sold out'
+      };
+
+      function hasAnyAvailableVariant(variants) {
+        return variants.some(v => v.available);
+      }
+
+      function isSizeAvailableForColor(variants, color, size) {
+        const v = findVariant(variants, color, size);
+        return !!(v && v.available);
+      }
+
+      function setPurchaseButtons(addBtn, buyBtn, soldOut) {
+        if (!addBtn) return;
+        if (soldOut) {
+          addBtn.disabled = true;
+          addBtn.textContent = LABELS.soldOut;
+          addBtn.classList.add('is-sold-out');
+          if (buyBtn) {
+            buyBtn.disabled = true;
+            buyBtn.hidden = true;
+          }
+        } else {
+          addBtn.disabled = false;
+          addBtn.textContent = LABELS.add;
+          addBtn.classList.remove('is-sold-out');
+          if (buyBtn) {
+            buyBtn.disabled = false;
+            buyBtn.hidden = false;
+            buyBtn.textContent = LABELS.buy;
+          }
+        }
+      }
+
+      function updateSizeAvailability(scope, variants, color) {
+        scope.querySelectorAll('.size-option').forEach(btn => {
+          const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();
+          const available = isSizeAvailableForColor(variants, color, sizeVal);
+          btn.classList.toggle('is-unavailable', !available);
+          btn.disabled = !available;
+          if (!available && btn.classList.contains('is-active')) {
+            btn.classList.remove('is-active');
+          }
+        });
+      }
+
+      function shouldShowSoldOut(variants, color, size, sizeButtons) {
+        if (!hasAnyAvailableVariant(variants)) return true;
+        if (size) return !isSizeAvailableForColor(variants, color, size);
+        if (sizeButtons.length && color) {
+          return !Array.from(sizeButtons).some(btn => {
+            const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();
+            return isSizeAvailableForColor(variants, color, sizeVal);
+          });
+        }
+        return false;
+      }
+
+      function updateCardAvailability(card) {
+        const variants = getCardVariants(card);
+        if (!variants) return;
+
+        const addBtn = card.querySelector('[data-add-to-cart]');
+        const buyBtn = card.querySelector('[data-buy-now]');
+        if (!addBtn) return;
+
+        const color = getActiveValue(card, '.swatch');
+        const size = getActiveValue(card, '.size-option');
+        const sizeButtons = card.querySelectorAll('[data-card-sizes] .size-option');
+
+        updateSizeAvailability(card, variants, color);
+        setPurchaseButtons(addBtn, buyBtn, shouldShowSoldOut(variants, color, size, sizeButtons));
+      }
+
+      function updateModalAvailability() {
+        if (!activeCardEl) return;
+        const variants = getCardVariants(activeCardEl);
+        if (!variants) return;
+
+        const addBtn = modal.querySelector('[data-modal-add-to-cart]');
+        const buyBtn = modal.querySelector('[data-modal-buy]');
+        const color = getActiveValue(modal, '.modal-swatches .swatch');
+        const size = getActiveValue(modal, '[data-modal-sizes] .size-option');
+        const sizeButtons = modal.querySelectorAll('[data-modal-sizes] .size-option');
+
+        updateSizeAvailability(modal, variants, color);
+        setPurchaseButtons(addBtn, buyBtn, shouldShowSoldOut(variants, color, size, sizeButtons));
+      }
+
+      document.querySelectorAll('.product-card').forEach(card => {
+        if (!getCardVariants(card)) return;
+        updateCardAvailability(card);
+        card.querySelectorAll('.swatch, .size-option').forEach(el => {
+          el.addEventListener('click', () => updateCardAvailability(card));
+        });
+      });
+
       function buyNowFromCard(card, color, size) {
         const variants = getCardVariants(card);
         if (!variants) {
@@ -295,7 +401,7 @@
         }
         const variant = findVariant(variants, chosenColor, chosenSize) || variants[0];
         if (!variant || !variant.available) {
-          alert('That option isn\'t available right now.');
+          alert(LABELS.soldOut);
           return;
         }
         window.location.href = '/cart/' + variant.id + ':1';
@@ -360,7 +466,7 @@
         }
         const variant = findVariant(variants, chosenColor, chosenSize) || variants[0];
         if (!variant || !variant.available) {
-          showCartToast("That option isn't available");
+          showCartToast(LABELS.soldOut);
           return;
         }
         fetch('/cart/add.js', {

@@ -55,8 +55,12 @@
   {%- endif -%}
 
   <div class="product-actions">
-    <button class="btn btn-primary" type="button" data-add-to-cart>Add to Cart</button>
-    <button class="btn btn-secondary" type="button" data-buy-now>Buy Now</button>
+    {%- if product.available -%}
+      <button class="btn btn-primary" type="button" data-add-to-cart>{{ 'products.product.add_to_cart' | t }}</button>
+      <button class="btn btn-secondary" type="button" data-buy-now>{{ 'products.product.buy_now' | t }}</button>
+    {%- else -%}
+      <button class="btn btn-primary is-sold-out" type="button" disabled aria-disabled="true">{{ 'products.product.sold_out' | t }}</button>
+    {%- endif -%}
   </div>
   <button class="details-link" data-modal-open="{{ idx }}">View details</button>
 </article>
