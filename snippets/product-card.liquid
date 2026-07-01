@@ -7,9 +7,13 @@
 {%- assign color_option = product.options_by_name[color_option_name] -%}
 {%- assign default_variant = product.selected_or_first_available_variant -%}
 
+{%- capture card_variants_json -%}
+[{% for variant in product.variants %}{"id":{{ variant.id }},"option1":{{ variant.option1 | json }},"option2":{{ variant.option2 | json }},"option3":{{ variant.option3 | json }},"available":{{ variant.available | json }},"inventory_management":{{ variant.inventory_management | json }},"inventory_quantity":{{ variant.inventory_quantity }}}{% unless forloop.last %},{% endunless %}{% endfor %}]
+{%- endcapture -%}
+
 <article class="product-card"
          data-product="{{ idx }}"
-         data-variants='{{ product.variants | json | escape }}'>
+         data-variants='{{ card_variants_json | strip | escape }}'>
   <button class="product-image" data-modal-open="{{ idx }}" aria-label="View {{ product.title }} details">
     {%- if default_variant.featured_image -%}
       <img src="{{ default_variant.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" />

@@ -308,8 +308,9 @@
 
       function isVariantInStock(v) {
         if (!v) return false;
-        if (v.inventory_management === 'shopify') {
-          return Number(v.inventory_quantity) > 0;
+        const qty = Number(v.inventory_quantity);
+        if (v.inventory_management === 'shopify' && Number.isFinite(qty)) {
+          return qty > 0;
         }
         return !!v.available;
       }
