@@ -277,14 +277,27 @@
         return (el.getAttribute('data-value') || el.getAttribute('aria-label') || el.textContent || '').trim();
       }
 
+      function variantOptions(v) {
+        if (v.options && v.options.length) {
+          return v.options.filter(Boolean).map(o => String(o).trim());
+        }
+        return [v.option1, v.option2, v.option3].filter(Boolean).map(o => String(o).trim());
+      }
+
       function findVariant(variants, color, size) {
         if (!variants || !variants.length) return null;
         return variants.find(v => {
-          const opts = (v.options || []).map(o => (o || '').toString());
+          const opts = variantOptions(v);
           if (color && !opts.includes(color)) return false;
           if (size && !opts.includes(size)) return false;
           return true;
         }) || null;
+      }
+
+      function getActiveColor(scope) {
+        const el = scope && (scope.querySelector('.swatch.is-active') || scope.querySelector('.color-swatches .swatch'));
+        if (!el) return null;
+        return (el.getAttribute('data-value') || el.getAttribute('aria-label') || '').trim();
       }
 
       const LABELS = {
@@ -293,13 +306,21 @@
         soldOut: 'Sold out'
       };
 
+      function isVariantInStock(v) {
+        if (!v) return false;
+        if (v.inventory_management === 'shopify') {
+          return Number(v.inventory_quantity) > 0;
+        }
+        return !!v.available;
+      }
+
       function hasAnyAvailableVariant(variants) {
-        return variants.some(v => v.available);
+        return variants.some(isVariantInStock);
       }
 
       function isSizeAvailableForColor(variants, color, size) {
         const v = findVariant(variants, color, size);
-        return !!(v && v.available);
+        return isVariantInStock(v);
       }
 
       function setPurchaseButtons(addBtn, buyBtn, soldOut) {
@@ -356,7 +377,7 @@
         const buyBtn = card.querySelector('[data-buy-now]');
         if (!addBtn) return;
 
-        const color = getActiveValue(card, '.swatch');
+        const color = getActiveColor(card);
         const size = getActiveValue(card, '.size-option');
         const sizeButtons = card.querySelectorAll('[data-card-sizes] .size-option');
 
@@ -371,7 +392,7 @@
 
         const addBtn = modal.querySelector('[data-modal-add-to-cart]');
         const buyBtn = modal.querySelector('[data-modal-buy]');
-        const color = getActiveValue(modal, '.modal-swatches .swatch');
+        const color = getActiveColor(modal) || getActiveValue(modal, '.modal-swatches .swatch');
         const size = getActiveValue(modal, '[data-modal-sizes] .size-option');
         const sizeButtons = modal.querySelectorAll('[data-modal-sizes] .size-option');
 
@@ -393,14 +414,14 @@
           alert('This is a demo product. Configure real products in Shopify to enable checkout.');
           return;
         }
-        const chosenColor = color || getActiveValue(card, '.swatch');
+        const chosenColor = color || getActiveColor(card);
         const chosenSize = size || getActiveValue(card, '.size-option');
         if (!chosenSize && card.querySelector('.size-option')) {
           alert('Please pick a size.');
           return;
         }
         const variant = findVariant(variants, chosenColor, chosenSize) || variants[0];
-        if (!variant || !variant.available) {
+        if (!variant || !isVariantInStock(variant)) {
           alert(LABELS.soldOut);
           return;
         }
@@ -458,14 +479,14 @@
           showCartToast('Demo product — set up real Shopify products first');
           return;
         }
-        const chosenColor = color || getActiveValue(card, '.swatch');
+        const chosenColor = color || getActiveColor(card);
         const chosenSize = size || getActiveValue(card, '.size-option');
         if (!chosenSize && card.querySelector('.size-option')) {
           showCartToast('Pick a size first');
           return;
         }
         const variant = findVariant(variants, chosenColor, chosenSize) || variants[0];
-        if (!variant || !variant.available) {
+        if (!variant || !isVariantInStock(variant)) {
           showCartToast(LABELS.soldOut);
           return;
         }
