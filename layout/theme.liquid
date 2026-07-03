@@ -26,6 +26,10 @@
 
   {% section 'footer' %}
 
+  {%- if request.page_type == 'index' -%}
+    {% render 'email-popup' %}
+  {%- endif -%}
+
   {% render 'product-modal' %}
 
   <div class="cart-toast" id="cartToast" role="status" aria-live="polite" hidden>Added to cart</div>

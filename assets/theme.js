@@ -2,6 +2,47 @@
       const yearEl = document.getElementById('year');
       if (yearEl) yearEl.textContent = new Date().getFullYear();
 
+      const emailPopup = document.querySelector('[data-email-popup]');
+      if (emailPopup) {
+        const storageKey = 'praali_email_popup_dismissed';
+        const hasMessage = !!emailPopup.querySelector('[data-email-popup-message]');
+
+        function hasDismissedEmailPopup() {
+          try { return window.localStorage.getItem(storageKey) === 'true'; }
+          catch (e) { return false; }
+        }
+
+        function markEmailPopupDismissed() {
+          try { window.localStorage.setItem(storageKey, 'true'); }
+          catch (e) { /* localStorage can be unavailable in private browsing */ }
+        }
+
+        function openEmailPopup() {
+          emailPopup.hidden = false;
+          document.body.classList.add('email-popup-open');
+          requestAnimationFrame(() => emailPopup.classList.add('is-visible'));
+        }
+
+        function closeEmailPopup() {
+          emailPopup.classList.remove('is-visible');
+          document.body.classList.remove('email-popup-open');
+          markEmailPopupDismissed();
+          setTimeout(() => { emailPopup.hidden = true; }, 220);
+        }
+
+        emailPopup.querySelectorAll('[data-email-popup-close]').forEach(el => {
+          el.addEventListener('click', closeEmailPopup);
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !emailPopup.hidden) closeEmailPopup();
+        });
+
+        if (hasMessage || !hasDismissedEmailPopup()) {
+          setTimeout(openEmailPopup, hasMessage ? 100 : 900);
+        }
+      }
+
 
       // Load products from inline JSON script (rendered by snippets/product-modal.liquid)
       let products = {};

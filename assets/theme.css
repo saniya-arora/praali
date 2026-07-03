@@ -1386,6 +1386,164 @@
       .cart-actions .btn { width: 100%; }
     }
 
+    /* EMAIL POPUP */
+    body.email-popup-open { overflow: hidden; }
+
+    .email-popup[hidden] { display: none; }
+    .email-popup {
+      position: fixed;
+      inset: 0;
+      z-index: 180;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+
+    .email-popup.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .email-popup-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 44, 57, 0.38);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    .email-popup-content {
+      position: relative;
+      width: min(640px, 100%);
+      background: #F4F0E8;
+      border: 1px solid rgba(92, 107, 75, 0.16);
+      border-radius: 18px;
+      box-shadow: 0 20px 56px rgba(0, 44, 57, 0.22);
+      padding: 54px 48px 64px;
+      text-align: center;
+      color: var(--brand-green-dark);
+    }
+
+    .email-popup-close {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      border: 0;
+      background: transparent;
+      color: var(--brand-green-dark);
+      font-size: 30px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    .email-popup-close:hover { color: var(--brand-green); }
+
+    .email-popup-heading {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 28px;
+      line-height: 1.1;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--brand-green-dark);
+      margin-bottom: 18px;
+    }
+
+    .email-popup-body {
+      max-width: 420px;
+      margin: 0 auto 34px;
+      color: var(--brand-green-dark);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .email-popup-form {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 14px;
+      max-width: 520px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+    }
+
+    .email-popup-form input[type="email"] {
+      flex: 1 1 300px;
+      min-width: 0;
+      padding: 15px 24px;
+      border: 1px solid rgba(92, 107, 75, 0.45);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.55);
+      color: var(--brand-green-dark);
+      font-family: "Euphemia UCAS", "Euphemia", "Gadugi", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .email-popup-form input[type="email"]:focus {
+      background: var(--bg);
+      border-color: var(--brand-green-dark);
+    }
+
+    .email-popup-form input[type="email"]::placeholder {
+      color: var(--brand-green);
+      opacity: 0.55;
+    }
+
+    .email-popup-form button {
+      flex: 0 0 auto;
+      padding: 15px 32px;
+      border: 1px solid var(--brand-green-light);
+      border-radius: 999px;
+      background: var(--brand-green-light);
+      color: var(--bg);
+      cursor: pointer;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .email-popup-form button:hover {
+      background: var(--brand-green);
+      border-color: var(--brand-green);
+    }
+
+    .email-popup-success,
+    .email-popup-error {
+      width: 100%;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .email-popup-success {
+      color: var(--brand-green-dark);
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .email-popup-error { color: #9C3E32; }
+
+    @media (max-width: 600px) {
+      .email-popup { padding: 18px; align-items: flex-start; padding-top: 96px; }
+      .email-popup-content { padding: 46px 24px 34px; }
+      .email-popup-heading { font-size: 22px; }
+      .email-popup-body { font-size: 14px; margin-bottom: 26px; }
+      .email-popup-form { flex-direction: column; gap: 10px; }
+      .email-popup-form input[type="email"],
+      .email-popup-form button { width: 100%; flex-basis: auto; }
+    }
+
     /* NEWSLETTER (homepage section) */
     .newsletter {
       padding: 80px 0;

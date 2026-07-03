@@ -1,0 +1,32 @@
+<div class="email-popup" id="emailPopup" data-email-popup hidden>
+  <div class="email-popup-overlay" data-email-popup-close></div>
+  <div class="email-popup-content" role="dialog" aria-modal="true" aria-labelledby="emailPopupTitle">
+    <button class="email-popup-close" type="button" data-email-popup-close aria-label="Close">×</button>
+
+    <h2 class="email-popup-heading" id="emailPopupTitle">Become a Praali girlie</h2>
+    <p class="email-popup-body">Be the first to hear about new collections, events, and behind-the-scenes updates.</p>
+
+    {%- form 'customer', class: 'email-popup-form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter,email-popup">
+      <input type="hidden" name="contact[accepts_marketing]" value="true">
+
+      {%- if form.posted_successfully? -%}
+        <p class="email-popup-success" data-email-popup-message>Thanks — you're in.</p>
+      {%- else -%}
+        <input
+          type="email"
+          name="contact[email]"
+          placeholder="your@email.com"
+          aria-label="Email address"
+          autocomplete="email"
+          required
+        />
+        <button type="submit">Sign up</button>
+      {%- endif -%}
+
+      {%- if form.errors -%}
+        <p class="email-popup-error" data-email-popup-message>{{ form.errors | default_errors }}</p>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+</div>
