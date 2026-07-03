@@ -1454,6 +1454,15 @@
       margin-bottom: 18px;
     }
 
+    .email-popup-heading[data-email-popup-message] {
+      width: 100%;
+      margin-bottom: 0;
+    }
+
+    .email-popup-heading[data-email-popup-message] + .email-popup-done {
+      margin-top: 28px;
+    }
+
     .email-popup-body {
       max-width: 420px;
       margin: 0 auto 34px;
@@ -1513,6 +1522,28 @@
     }
 
     .email-popup-form button:hover {
+      background: var(--brand-green);
+      border-color: var(--brand-green);
+    }
+
+    .email-popup-done {
+      flex: 0 0 auto;
+      min-width: 150px;
+      padding: 15px 32px;
+      border: 1px solid var(--brand-green-light);
+      border-radius: 999px;
+      background: var(--brand-green-light);
+      color: var(--bg);
+      cursor: pointer;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .email-popup-done:hover {
       background: var(--brand-green);
       border-color: var(--brand-green);
     }

@@ -3,16 +3,16 @@
   <div class="email-popup-content" role="dialog" aria-modal="true" aria-labelledby="emailPopupTitle">
     <button class="email-popup-close" type="button" data-email-popup-close aria-label="Close">×</button>
 
-    <h2 class="email-popup-heading" id="emailPopupTitle">Become a Praali girlie</h2>
-    <p class="email-popup-body">Be the first to hear about new collections, events, and behind-the-scenes updates.</p>
-
     {%- form 'customer', class: 'email-popup-form' -%}
       <input type="hidden" name="contact[tags]" value="newsletter,email-popup">
       <input type="hidden" name="contact[accepts_marketing]" value="true">
 
       {%- if form.posted_successfully? -%}
-        <p class="email-popup-success" data-email-popup-message>Thanks — you're in.</p>
+        <h2 class="email-popup-heading" id="emailPopupTitle" data-email-popup-message>Thanks, you're in.</h2>
+        <button class="email-popup-done" type="button" data-email-popup-close>Done</button>
       {%- else -%}
+        <h2 class="email-popup-heading" id="emailPopupTitle">Become a Praali girlie</h2>
+        <p class="email-popup-body">Be the first to hear about new collections, events, and behind-the-scenes updates.</p>
         <input
           type="email"
           name="contact[email]"
