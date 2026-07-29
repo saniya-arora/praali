@@ -1659,6 +1659,8 @@
       gap: 10px;
     }
 
+    .restock-modal-form[hidden] { display: none; }
+
     .restock-modal-form input[type="email"] {
       flex: 1 1 280px;
       min-width: 0;
