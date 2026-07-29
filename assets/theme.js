@@ -74,6 +74,7 @@
             if (imageLabel) {
               imageLabel.textContent = `${product.name.toLowerCase()} — ${color.name.toLowerCase()}`;
             }
+            if (getCardVariants(card)) updateCardAvailability(card);
           });
         });
 
@@ -89,6 +90,7 @@
                 e.stopPropagation();
                 existingButtons.forEach(x => x.classList.remove('is-active'));
                 btn.classList.add('is-active');
+                if (getCardVariants(card)) updateCardAvailability(card);
               });
             });
           } else {
@@ -226,11 +228,16 @@
 
 
         modalSwatches.innerHTML = '';
+        const cardSwatches = activeCardEl ? activeCardEl.querySelectorAll('.color-swatches .swatch') : [];
         product.colors.forEach((c, i) => {
           const b = document.createElement('button');
           b.className = 'swatch';
           b.style.background = c.hex;
-          b.setAttribute('aria-label', c.name);
+          const shopifyColor = cardSwatches[i]
+            ? (cardSwatches[i].getAttribute('data-value') || c.name)
+            : c.name;
+          b.setAttribute('data-value', shopifyColor);
+          b.setAttribute('aria-label', shopifyColor);
           b.addEventListener('click', () => {
             renderColor(product, i);
             updateModalAvailability();
@@ -312,7 +319,11 @@
         if (!card) return null;
         const raw = card.getAttribute('data-variants');
         if (!raw) return null;
-        try { return JSON.parse(raw); } catch (e) { return null; }
+        try { return JSON.parse(raw); }
+        catch (e) {
+          console.warn('Could not parse product variant data', e);
+          return null;
+        }
       }
 
       function getActiveValue(scope, selector) {
@@ -337,6 +348,11 @@
         const colorKey = color ? normalizeOption(color) : '';
         const sizeKey = size ? normalizeOption(size) : '';
         return variants.find(v => {
+          if (v.color != null || v.size != null) {
+            if (colorKey && normalizeOption(v.color) !== colorKey) return false;
+            if (sizeKey && normalizeOption(v.size) !== sizeKey) return false;
+            return true;
+          }
           const opts = variantOptions(v).map(normalizeOption);
           if (colorKey && !opts.includes(colorKey)) return false;
           if (sizeKey && !opts.includes(sizeKey)) return false;
@@ -345,7 +361,12 @@
       }
 
       function getActiveColor(scope) {
-        const el = scope && (scope.querySelector('.swatch.is-active') || scope.querySelector('.color-swatches .swatch'));
+        const el = scope && (
+          scope.querySelector('.swatch.is-active') ||
+          scope.querySelector('.color-swatches .swatch') ||
+          scope.querySelector('.modal-swatches .swatch.is-active') ||
+          scope.querySelector('.modal-swatches .swatch')
+        );
         if (!el) return null;
         return (el.getAttribute('data-value') || el.getAttribute('aria-label') || '').trim();
       }
@@ -502,11 +523,12 @@
 
       function isVariantInStock(v) {
         if (!v) return false;
+        if (v.available === false) return false;
         const qty = Number(v.inventory_quantity);
         if (v.inventory_management === 'shopify' && Number.isFinite(qty)) {
           return qty > 0;
         }
-        return !!v.available;
+        return v.available !== false;
       }
 
       function hasAnyAvailableVariant(variants) {
