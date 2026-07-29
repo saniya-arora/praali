@@ -15,16 +15,5 @@
       { "type": "color", "id": "color_brand_green_light", "label": "Brand green (light)", "default": "#8AA572" },
       { "type": "color", "id": "color_highlight", "label": "Highlight (yellow)", "default": "#FEE569" }
     ]
-  },
-  {
-    "name": "Marketing",
-    "settings": [
-      {
-        "type": "text",
-        "id": "klaviyo_company_id",
-        "label": "Klaviyo public API key (Company ID)",
-        "info": "Find in Klaviyo → Settings → Account → API keys. Required for back-in-stock alerts."
-      }
-    ]
   }
 ]
