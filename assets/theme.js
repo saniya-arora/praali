@@ -328,12 +328,18 @@
         return [v.option1, v.option2, v.option3].filter(Boolean).map(o => String(o).trim());
       }
 
+      function normalizeOption(value) {
+        return String(value || '').trim().toLowerCase();
+      }
+
       function findVariant(variants, color, size) {
         if (!variants || !variants.length) return null;
+        const colorKey = color ? normalizeOption(color) : '';
+        const sizeKey = size ? normalizeOption(size) : '';
         return variants.find(v => {
-          const opts = variantOptions(v);
-          if (color && !opts.includes(color)) return false;
-          if (size && !opts.includes(size)) return false;
+          const opts = variantOptions(v).map(normalizeOption);
+          if (colorKey && !opts.includes(colorKey)) return false;
+          if (sizeKey && !opts.includes(sizeKey)) return false;
           return true;
         }) || null;
       }
@@ -509,7 +515,6 @@
 
       function isSizeAvailableForColor(variants, color, size) {
         const v = findVariant(variants, color, size);
-        if (!v) return true;
         return isVariantInStock(v);
       }
 
@@ -550,10 +555,9 @@
       function updateSizeAvailability(scope, variants, color) {
         scope.querySelectorAll('.size-option').forEach(btn => {
           const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();
-          const variant = findVariant(variants, color, sizeVal);
-          const soldOut = !!(variant && !isVariantInStock(variant));
-          btn.classList.toggle('is-unavailable', soldOut);
-          btn.hidden = !variant;
+          const available = isSizeAvailableForColor(variants, color, sizeVal);
+          btn.classList.toggle('is-unavailable', !available);
+          btn.hidden = false;
         });
       }
 
@@ -562,7 +566,6 @@
         if (size) return isSizeSoldOutForColor(variants, color, size);
         if (sizeButtons.length && color) {
           return !Array.from(sizeButtons).some(btn => {
-            if (btn.hidden) return false;
             const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();
             return isSizeAvailableForColor(variants, color, sizeVal);
           });
