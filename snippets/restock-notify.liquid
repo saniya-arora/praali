@@ -1,0 +1,22 @@
+{%- comment -%}
+  Back-in-stock email signup (Klaviyo). Shown via JS when a sold-out size is selected.
+  Expects optional wrapper_class for card vs modal spacing.
+{%- endcomment -%}
+
+<div class="restock-notify{% if wrapper_class != blank %} {{ wrapper_class }}{% endif %}" data-restock-notify hidden>
+  <p class="restock-notify-label" data-restock-label>{{ 'products.product.restock_pick_size' | t }}</p>
+  <form class="restock-notify-form" data-restock-form novalidate>
+    <input
+      type="email"
+      name="email"
+      data-restock-email
+      placeholder="{{ 'products.product.restock_email_placeholder' | t }}"
+      aria-label="{{ 'products.product.restock_email_placeholder' | t }}"
+      autocomplete="email"
+      required
+    />
+    <button type="submit" data-restock-submit>{{ 'products.product.restock_submit' | t }}</button>
+  </form>
+  <p class="restock-notify-success" data-restock-success hidden>{{ 'products.product.restock_success' | t }}</p>
+  <p class="restock-notify-error" data-restock-error hidden></p>
+</div>

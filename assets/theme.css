@@ -994,7 +994,7 @@
     .size-option.is-unavailable {
       opacity: 0.4;
       text-decoration: line-through;
-      cursor: not-allowed;
+      cursor: pointer;
     }
 
     .size-option.is-unavailable:hover,
@@ -1005,6 +1005,101 @@
     }
 
     .modal-actions { display: flex; gap: 8px; margin: 24px 0 28px; }
+
+    /* RESTOCK NOTIFY */
+    .restock-notify[hidden] { display: none; }
+
+    .restock-notify--card {
+      margin-top: 8px;
+    }
+
+    .restock-notify--modal {
+      margin: 0 0 28px;
+    }
+
+    .restock-notify-label {
+      margin: 0 0 12px;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--brand-green-dark);
+    }
+
+    .restock-notify-form {
+      display: flex;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .restock-notify-form input[type="email"] {
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: 12px 16px;
+      border: 1px solid var(--brand-green-light);
+      border-radius: 999px;
+      background: var(--bg);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--brand-green-dark);
+    }
+
+    .restock-notify-form input[type="email"]:focus {
+      outline: none;
+      border-color: var(--brand-green-dark);
+    }
+
+    .restock-notify-form input[type="email"]::placeholder {
+      color: var(--brand-green);
+      opacity: 0.55;
+    }
+
+    .restock-notify-form button {
+      flex: 0 0 auto;
+      padding: 12px 20px;
+      border: 1px solid var(--brand-green-light);
+      border-radius: 999px;
+      background: var(--brand-green-light);
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      color: var(--bg);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .restock-notify-form button:hover:not(:disabled) {
+      background: var(--brand-green);
+      border-color: var(--brand-green);
+    }
+
+    .restock-notify-form button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .restock-notify-success {
+      margin: 0;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      color: var(--brand-green-dark);
+    }
+
+    .restock-notify-error {
+      margin: 8px 0 0;
+      font-size: 13px;
+      color: #9C3E32;
+    }
+
+    @media (max-width: 600px) {
+      .restock-notify-form {
+        flex-direction: column;
+      }
+
+      .restock-notify-form input[type="email"],
+      .restock-notify-form button {
+        width: 100%;
+      }
+    }
 
     .size-chart-desc {
       font-size: 14px;

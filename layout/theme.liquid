@@ -34,6 +34,16 @@
 
   <div class="cart-toast" id="cartToast" role="status" aria-live="polite" hidden>Added to cart</div>
 
+  <script>
+    window.praaliKlaviyo = { companyId: {{ settings.klaviyo_company_id | json }} };
+    window.praaliStrings = {
+      restockLabel: {{ 'products.product.restock_label' | t | json }},
+      restockSuccess: {{ 'products.product.restock_success' | t | json }},
+      restockError: {{ 'products.product.restock_error' | t | json }},
+      restockNotConfigured: {{ 'products.product.restock_not_configured' | t | json }},
+      restockPickSize: {{ 'products.product.restock_pick_size' | t | json }}
+    };
+  </script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
 </body>
 </html>

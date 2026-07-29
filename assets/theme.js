@@ -347,6 +347,113 @@
         soldOut: 'Sold out'
       };
 
+      const STRINGS = window.praaliStrings || {};
+      const KLAVIYO = window.praaliKlaviyo || {};
+
+      function restockLabelForSize(size) {
+        const template = STRINGS.restockLabel || 'Email me when size __SIZE__ is back in stock.';
+        return template.replace('__SIZE__', size);
+      }
+
+      function resetRestockFeedback(restockEl) {
+        const form = restockEl.querySelector('[data-restock-form]');
+        const success = restockEl.querySelector('[data-restock-success]');
+        const error = restockEl.querySelector('[data-restock-error]');
+        if (form) form.hidden = false;
+        if (success) success.hidden = true;
+        if (error) {
+          error.hidden = true;
+          error.textContent = '';
+        }
+      }
+
+      function showRestockSuccess(restockEl) {
+        const form = restockEl.querySelector('[data-restock-form]');
+        const success = restockEl.querySelector('[data-restock-success]');
+        const error = restockEl.querySelector('[data-restock-error]');
+        if (form) form.hidden = true;
+        if (error) error.hidden = true;
+        if (success) success.hidden = false;
+      }
+
+      function showRestockError(restockEl, message) {
+        const error = restockEl.querySelector('[data-restock-error]');
+        if (!error) return;
+        error.textContent = message || STRINGS.restockError || 'Something went wrong. Please try again.';
+        error.hidden = false;
+      }
+
+      function subscribeBackInStock(email, variantId) {
+        const companyId = KLAVIYO.companyId;
+        if (!companyId) {
+          return Promise.reject(new Error(STRINGS.restockNotConfigured || 'Restock alerts are not configured yet.'));
+        }
+        return fetch(
+          'https://a.klaviyo.com/client/back-in-stock-subscriptions/?company_id=' + encodeURIComponent(companyId),
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              revision: '2024-07-15'
+            },
+            body: JSON.stringify({
+              data: {
+                type: 'back-in-stock-subscription',
+                attributes: {
+                  profile: {
+                    data: {
+                      type: 'profile',
+                      attributes: { email: email }
+                    }
+                  },
+                  channels: ['EMAIL']
+                },
+                relationships: {
+                  variant: {
+                    data: {
+                      type: 'catalog-variant',
+                      id: '$shopify:::$default:::' + variantId
+                    }
+                  }
+                }
+              }
+            })
+          }
+        ).then(function (res) {
+          if (res.ok) return res.json();
+          return res.json().catch(function () { return {}; }).then(function (body) {
+            const msg = body && body.errors && body.errors[0] && body.errors[0].detail;
+            throw new Error(msg || STRINGS.restockError || 'Something went wrong. Please try again.');
+          });
+        });
+      }
+
+      function updateRestockUI(scope, variants, color, size, restockEl, actionsEl, addBtn, buyBtn, sizeButtons) {
+        if (!restockEl) {
+          if (actionsEl) actionsEl.hidden = false;
+          setPurchaseButtons(addBtn, buyBtn, shouldShowSoldOut(variants, color, size, sizeButtons));
+          return;
+        }
+
+        const variant = size ? findVariant(variants, color, size) : null;
+        const showRestock = !!(size && variant && !isVariantInStock(variant));
+
+        if (showRestock) {
+          const wasHidden = restockEl.hidden;
+          restockEl.hidden = false;
+          if (actionsEl) actionsEl.hidden = true;
+          const labelEl = restockEl.querySelector('[data-restock-label]');
+          const newLabel = restockLabelForSize(size);
+          const labelChanged = labelEl && labelEl.textContent !== newLabel;
+          if (labelEl) labelEl.textContent = newLabel;
+          if (wasHidden || labelChanged) resetRestockFeedback(restockEl);
+        } else {
+          restockEl.hidden = true;
+          if (actionsEl) actionsEl.hidden = false;
+          setPurchaseButtons(addBtn, buyBtn, shouldShowSoldOut(variants, color, size, sizeButtons));
+        }
+      }
+
       function isVariantInStock(v) {
         if (!v) return false;
         const qty = Number(v.inventory_quantity);
@@ -392,10 +499,6 @@
           const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();
           const available = isSizeAvailableForColor(variants, color, sizeVal);
           btn.classList.toggle('is-unavailable', !available);
-          btn.disabled = !available;
-          if (!available && btn.classList.contains('is-active')) {
-            btn.classList.remove('is-active');
-          }
         });
       }
 
@@ -417,14 +520,15 @@
 
         const addBtn = card.querySelector('[data-add-to-cart]');
         const buyBtn = card.querySelector('[data-buy-now]');
-        if (!addBtn) return;
+        const actionsEl = card.querySelector('[data-product-actions]');
+        const restockEl = card.querySelector('[data-restock-notify]');
 
         const color = getActiveColor(card);
         const size = getActiveValue(card, '.size-option');
         const sizeButtons = card.querySelectorAll('[data-card-sizes] .size-option');
 
         updateSizeAvailability(card, variants, color);
-        setPurchaseButtons(addBtn, buyBtn, shouldShowSoldOut(variants, color, size, sizeButtons));
+        updateRestockUI(card, variants, color, size, restockEl, actionsEl, addBtn, buyBtn, sizeButtons);
       }
 
       function updateModalAvailability() {
@@ -434,13 +538,60 @@
 
         const addBtn = modal.querySelector('[data-modal-add-to-cart]');
         const buyBtn = modal.querySelector('[data-modal-buy]');
+        const actionsEl = modal.querySelector('[data-modal-actions]');
+        const restockEl = modal.querySelector('[data-restock-notify]');
         const color = getActiveColor(modal) || getActiveValue(modal, '.modal-swatches .swatch');
         const size = getActiveValue(modal, '[data-modal-sizes] .size-option');
         const sizeButtons = modal.querySelectorAll('[data-modal-sizes] .size-option');
 
         updateSizeAvailability(modal, variants, color);
-        setPurchaseButtons(addBtn, buyBtn, shouldShowSoldOut(variants, color, size, sizeButtons));
+        updateRestockUI(modal, variants, color, size, restockEl, actionsEl, addBtn, buyBtn, sizeButtons);
       }
+
+      function getVariantSourceCard(restockEl) {
+        const card = restockEl.closest('.product-card');
+        if (card) return card;
+        return activeCardEl;
+      }
+
+      function handleRestockSubmit(e) {
+        e.preventDefault();
+        const form = e.currentTarget;
+        const restockEl = form.closest('[data-restock-notify]');
+        if (!restockEl) return;
+
+        const card = getVariantSourceCard(restockEl);
+        const variants = getCardVariants(card);
+        if (!variants) return;
+
+        const scope = restockEl.closest('.product-card') || modal;
+        const color = getActiveColor(scope) || getActiveValue(scope, '.modal-swatches .swatch');
+        const sizeSelector = scope.classList.contains('product-card') ? '.size-option' : '[data-modal-sizes] .size-option';
+        const size = getActiveValue(scope, sizeSelector);
+        const variant = findVariant(variants, color, size);
+        if (!variant) return;
+
+        const emailInput = form.querySelector('[data-restock-email]');
+        const submitBtn = form.querySelector('[data-restock-submit]');
+        const email = emailInput && emailInput.value ? emailInput.value.trim() : '';
+        if (!email) return;
+
+        if (submitBtn) submitBtn.disabled = true;
+        subscribeBackInStock(email, variant.id)
+          .then(function () {
+            showRestockSuccess(restockEl);
+          })
+          .catch(function (err) {
+            showRestockError(restockEl, err && err.message);
+          })
+          .finally(function () {
+            if (submitBtn) submitBtn.disabled = false;
+          });
+      }
+
+      document.querySelectorAll('[data-restock-form]').forEach(function (form) {
+        form.addEventListener('submit', handleRestockSubmit);
+      });
 
       document.querySelectorAll('.product-card').forEach(card => {
         if (!getCardVariants(card)) return;

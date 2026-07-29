@@ -41,10 +41,12 @@
           <div class="size-options" data-modal-sizes></div>
         </div>
 
-        <div class="modal-actions">
+        <div class="modal-actions" data-modal-actions>
           <button class="btn btn-primary" type="button" data-modal-add-to-cart>Add to Cart</button>
           <button class="btn btn-secondary" type="button" data-modal-buy>Buy Now</button>
         </div>
+
+        {% render 'restock-notify', wrapper_class: 'restock-notify--modal' %}
 
         <div class="modal-section">
           <h4>Size Chart</h4>
