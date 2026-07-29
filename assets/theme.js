@@ -383,27 +383,11 @@
         error.hidden = false;
       }
 
-      function subscribeBackInStockLegacy(email, variantId) {
+      function subscribeBackInStock(email, variantId) {
         const companyId = KLAVIYO.companyId;
-        const body = new FormData();
-        body.append('a', companyId);
-        body.append('email', email);
-        body.append('variant', String(variantId));
-        body.append('platform', 'shopify');
-        return fetch('https://a.klaviyo.com/onsite/components/back-in-stock/subscribe', {
-          method: 'POST',
-          body: body
-        }).then(function (res) {
-          if (res.ok) return res.json().catch(function () { return {}; });
-          return res.json().catch(function () { return {}; }).then(function (payload) {
-            const msg = payload && payload.errors && payload.errors[0] && payload.errors[0].detail;
-            throw new Error(msg || STRINGS.restockError || 'Something went wrong. Please try again.');
-          });
-        });
-      }
-
-      function subscribeBackInStockClient(email, variantId) {
-        const companyId = KLAVIYO.companyId;
+        if (!companyId) {
+          return Promise.reject(new Error(STRINGS.restockNotConfigured || 'Restock alerts are not configured yet.'));
+        }
         const id = String(variantId);
         return fetch(
           'https://a.klaviyo.com/client/back-in-stock-subscriptions/?company_id=' + encodeURIComponent(companyId),
@@ -440,29 +424,14 @@
           if (res.ok) return res.json().catch(function () { return {}; });
           return res.json().catch(function () { return {}; }).then(function (body) {
             const err = body && body.errors && body.errors[0];
-            const msg = err && err.detail;
-            const notFound = err && err.code === 'variant_not_found';
-            const error = new Error(
-              notFound
-                ? (STRINGS.restockVariantNotSynced || msg)
-                : (msg || STRINGS.restockError || 'Something went wrong. Please try again.')
-            );
-            error.variantNotFound = notFound;
-            throw error;
+            if (err && err.code === 'variant_not_found') {
+              console.warn('Klaviyo has no catalog variant for Shopify variant', id);
+              throw new Error(STRINGS.restockVariantNotSynced || err.detail);
+            }
+            throw new Error((err && err.detail) || STRINGS.restockError || 'Something went wrong. Please try again.');
           });
-        });
-      }
-
-      function subscribeBackInStock(email, variantId) {
-        const companyId = KLAVIYO.companyId;
-        if (!companyId) {
-          return Promise.reject(new Error(STRINGS.restockNotConfigured || 'Restock alerts are not configured yet.'));
-        }
-        return subscribeBackInStockClient(email, variantId).catch(function (err) {
-          if (err && err.variantNotFound) {
-            return subscribeBackInStockLegacy(email, variantId);
-          }
-          throw err;
+        }, function () {
+          throw new Error(STRINGS.restockError || 'Something went wrong. Please try again.');
         });
       }
 
