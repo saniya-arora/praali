@@ -58,7 +58,7 @@
     </div>
   {%- endif -%}
 
-  <div class="product-actions" data-product-actions>
+  <div class="product-actions">
     {%- if product.available -%}
       <button class="btn btn-primary" type="button" data-add-to-cart>{{ 'products.product.add_to_cart' | t }}</button>
       <button class="btn btn-secondary" type="button" data-buy-now>{{ 'products.product.buy_now' | t }}</button>
@@ -66,6 +66,5 @@
       <button class="btn btn-primary is-sold-out" type="button" disabled aria-disabled="true">{{ 'products.product.sold_out' | t }}</button>
     {%- endif -%}
   </div>
-  {% render 'restock-notify', wrapper_class: 'restock-notify--card' %}
   <button class="details-link" data-modal-open="{{ idx }}">View details</button>
 </article>

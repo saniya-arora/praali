@@ -248,6 +248,7 @@
             modalSizes.querySelectorAll('.size-option').forEach(x => x.classList.remove('is-active'));
             b.classList.add('is-active');
             updateModalAvailability();
+            maybeOpenRestockModal(modal, activeCardEl, '[data-modal-sizes] .size-option');
           });
           modalSizes.appendChild(b);
         });
@@ -350,37 +351,62 @@
       const STRINGS = window.praaliStrings || {};
       const KLAVIYO = window.praaliKlaviyo || {};
 
+      const restockModal = document.querySelector('[data-restock-modal]');
+      const restockForm = restockModal && restockModal.querySelector('[data-restock-form]');
+      const restockLabel = restockModal && restockModal.querySelector('[data-restock-label]');
+      const restockEmail = restockModal && restockModal.querySelector('[data-restock-email]');
+      const restockSubmit = restockModal && restockModal.querySelector('[data-restock-submit]');
+      const restockSuccess = restockModal && restockModal.querySelector('[data-restock-success]');
+      const restockError = restockModal && restockModal.querySelector('[data-restock-error]');
+
+      /* Variant the shopper asked to be notified about */
+      let restockVariantId = null;
+
       function restockLabelForSize(size) {
         const template = STRINGS.restockLabel || 'Email me when size __SIZE__ is back in stock.';
         return template.replace('__SIZE__', size);
       }
 
-      function resetRestockFeedback(restockEl) {
-        const form = restockEl.querySelector('[data-restock-form]');
-        const success = restockEl.querySelector('[data-restock-success]');
-        const error = restockEl.querySelector('[data-restock-error]');
-        if (form) form.hidden = false;
-        if (success) success.hidden = true;
-        if (error) {
-          error.hidden = true;
-          error.textContent = '';
+      function resetRestockFeedback() {
+        if (restockForm) restockForm.hidden = false;
+        if (restockSuccess) restockSuccess.hidden = true;
+        if (restockError) {
+          restockError.hidden = true;
+          restockError.textContent = '';
         }
       }
 
-      function showRestockSuccess(restockEl) {
-        const form = restockEl.querySelector('[data-restock-form]');
-        const success = restockEl.querySelector('[data-restock-success]');
-        const error = restockEl.querySelector('[data-restock-error]');
-        if (form) form.hidden = true;
-        if (error) error.hidden = true;
-        if (success) success.hidden = false;
+      function showRestockSuccess() {
+        if (restockForm) restockForm.hidden = true;
+        if (restockError) restockError.hidden = true;
+        if (restockSuccess) restockSuccess.hidden = false;
       }
 
-      function showRestockError(restockEl, message) {
-        const error = restockEl.querySelector('[data-restock-error]');
-        if (!error) return;
-        error.textContent = message || STRINGS.restockError || 'Something went wrong. Please try again.';
-        error.hidden = false;
+      function showRestockError(message) {
+        if (!restockError) return;
+        restockError.textContent = message || STRINGS.restockError || 'Something went wrong. Please try again.';
+        restockError.hidden = false;
+      }
+
+      function openRestockModal(variant, size) {
+        if (!restockModal) return;
+        restockVariantId = variant.id;
+        if (restockLabel) restockLabel.textContent = restockLabelForSize(size);
+        resetRestockFeedback();
+        if (restockEmail) restockEmail.value = '';
+        restockModal.hidden = false;
+        document.body.classList.add('restock-modal-open');
+        requestAnimationFrame(() => {
+          restockModal.classList.add('is-visible');
+          if (restockEmail) restockEmail.focus();
+        });
+      }
+
+      function closeRestockModal() {
+        if (!restockModal) return;
+        restockModal.classList.remove('is-visible');
+        document.body.classList.remove('restock-modal-open');
+        setTimeout(() => { restockModal.hidden = true; }, 220);
       }
 
       function subscribeBackInStock(email, variantId) {
@@ -435,31 +461,6 @@
         });
       }
 
-      function updateRestockUI(scope, variants, color, size, restockEl, actionsEl, addBtn, buyBtn, sizeButtons) {
-        if (!restockEl) {
-          if (actionsEl) actionsEl.hidden = false;
-          setPurchaseButtons(addBtn, buyBtn, shouldShowSoldOut(variants, color, size, sizeButtons));
-          return;
-        }
-
-        const showRestock = isSizeSoldOutForColor(variants, color, size);
-
-        if (showRestock) {
-          const wasHidden = restockEl.hidden;
-          restockEl.hidden = false;
-          if (actionsEl) actionsEl.hidden = true;
-          const labelEl = restockEl.querySelector('[data-restock-label]');
-          const newLabel = restockLabelForSize(size);
-          const labelChanged = labelEl && labelEl.textContent !== newLabel;
-          if (labelEl) labelEl.textContent = newLabel;
-          if (wasHidden || labelChanged) resetRestockFeedback(restockEl);
-        } else {
-          restockEl.hidden = true;
-          if (actionsEl) actionsEl.hidden = false;
-          setPurchaseButtons(addBtn, buyBtn, shouldShowSoldOut(variants, color, size, sizeButtons));
-        }
-      }
-
       function isVariantInStock(v) {
         if (!v) return false;
         const qty = Number(v.inventory_quantity);
@@ -478,9 +479,17 @@
         return isVariantInStock(v);
       }
 
-      function isSizeSoldOutForColor(variants, color, size) {
-        const v = findVariant(variants, color, size);
-        return !!(v && !isVariantInStock(v));
+      /* Opens the restock modal when the shopper picks a sold-out size */
+      function maybeOpenRestockModal(scope, card, sizeSelector) {
+        if (!restockModal) return;
+        const variants = getCardVariants(card);
+        if (!variants) return;
+        const size = getActiveValue(scope, sizeSelector);
+        if (!size) return;
+        const color = getActiveColor(scope) || getActiveValue(scope, '.modal-swatches .swatch');
+        const variant = findVariant(variants, color, size);
+        if (!variant || isVariantInStock(variant)) return;
+        openRestockModal(variant, size);
       }
 
       function setPurchaseButtons(addBtn, buyBtn, soldOut) {
@@ -531,15 +540,13 @@
 
         const addBtn = card.querySelector('[data-add-to-cart]');
         const buyBtn = card.querySelector('[data-buy-now]');
-        const actionsEl = card.querySelector('[data-product-actions]');
-        const restockEl = card.querySelector('[data-restock-notify]');
 
         const color = getActiveColor(card);
         const size = getActiveValue(card, '.size-option');
         const sizeButtons = card.querySelectorAll('[data-card-sizes] .size-option');
 
         updateSizeAvailability(card, variants, color);
-        updateRestockUI(card, variants, color, size, restockEl, actionsEl, addBtn, buyBtn, sizeButtons);
+        setPurchaseButtons(addBtn, buyBtn, shouldShowSoldOut(variants, color, size, sizeButtons));
       }
 
       function updateModalAvailability() {
@@ -549,66 +556,51 @@
 
         const addBtn = modal.querySelector('[data-modal-add-to-cart]');
         const buyBtn = modal.querySelector('[data-modal-buy]');
-        const actionsEl = modal.querySelector('[data-modal-actions]');
-        const restockEl = modal.querySelector('[data-restock-notify]');
         const color = getActiveColor(modal) || getActiveValue(modal, '.modal-swatches .swatch');
         const size = getActiveValue(modal, '[data-modal-sizes] .size-option');
         const sizeButtons = modal.querySelectorAll('[data-modal-sizes] .size-option');
 
         updateSizeAvailability(modal, variants, color);
-        updateRestockUI(modal, variants, color, size, restockEl, actionsEl, addBtn, buyBtn, sizeButtons);
+        setPurchaseButtons(addBtn, buyBtn, shouldShowSoldOut(variants, color, size, sizeButtons));
       }
 
-      function getVariantSourceCard(restockEl) {
-        const card = restockEl.closest('.product-card');
-        if (card) return card;
-        return activeCardEl;
+      if (restockModal) {
+        restockModal.querySelectorAll('[data-restock-close]').forEach(el => {
+          el.addEventListener('click', closeRestockModal);
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !restockModal.hidden) closeRestockModal();
+        });
       }
 
-      function handleRestockSubmit(e) {
-        e.preventDefault();
-        const form = e.currentTarget;
-        const restockEl = form.closest('[data-restock-notify]');
-        if (!restockEl) return;
+      if (restockForm) {
+        restockForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const email = restockEmail && restockEmail.value ? restockEmail.value.trim() : '';
+          if (!email || !restockVariantId) return;
 
-        const card = getVariantSourceCard(restockEl);
-        const variants = getCardVariants(card);
-        if (!variants) return;
-
-        const scope = restockEl.closest('.product-card') || modal;
-        const color = getActiveColor(scope) || getActiveValue(scope, '.modal-swatches .swatch');
-        const sizeSelector = scope.classList.contains('product-card') ? '.size-option' : '[data-modal-sizes] .size-option';
-        const size = getActiveValue(scope, sizeSelector);
-        const variant = findVariant(variants, color, size);
-        if (!variant) return;
-
-        const emailInput = form.querySelector('[data-restock-email]');
-        const submitBtn = form.querySelector('[data-restock-submit]');
-        const email = emailInput && emailInput.value ? emailInput.value.trim() : '';
-        if (!email) return;
-
-        if (submitBtn) submitBtn.disabled = true;
-        subscribeBackInStock(email, variant.id)
-          .then(function () {
-            showRestockSuccess(restockEl);
-          })
-          .catch(function (err) {
-            showRestockError(restockEl, err && err.message);
-          })
-          .finally(function () {
-            if (submitBtn) submitBtn.disabled = false;
-          });
+          if (restockSubmit) restockSubmit.disabled = true;
+          subscribeBackInStock(email, restockVariantId)
+            .then(showRestockSuccess)
+            .catch(err => showRestockError(err && err.message))
+            .finally(() => {
+              if (restockSubmit) restockSubmit.disabled = false;
+            });
+        });
       }
-
-      document.querySelectorAll('[data-restock-form]').forEach(function (form) {
-        form.addEventListener('submit', handleRestockSubmit);
-      });
 
       document.querySelectorAll('.product-card').forEach(card => {
         if (!getCardVariants(card)) return;
         updateCardAvailability(card);
-        card.querySelectorAll('.swatch, .size-option').forEach(el => {
+        card.querySelectorAll('.swatch').forEach(el => {
           el.addEventListener('click', () => updateCardAvailability(card));
+        });
+        card.querySelectorAll('.size-option').forEach(el => {
+          el.addEventListener('click', () => {
+            updateCardAvailability(card);
+            maybeOpenRestockModal(card, card, '.size-option');
+          });
         });
       });
 

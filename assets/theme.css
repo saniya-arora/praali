@@ -1006,101 +1006,6 @@
 
     .modal-actions { display: flex; gap: 8px; margin: 24px 0 28px; }
 
-    /* RESTOCK NOTIFY */
-    .restock-notify[hidden] { display: none; }
-
-    .restock-notify--card {
-      margin-top: 8px;
-    }
-
-    .restock-notify--modal {
-      margin: 0 0 28px;
-    }
-
-    .restock-notify-label {
-      margin: 0 0 12px;
-      font-size: 14px;
-      line-height: 1.45;
-      color: var(--brand-green-dark);
-    }
-
-    .restock-notify-form {
-      display: flex;
-      gap: 8px;
-      align-items: stretch;
-    }
-
-    .restock-notify-form input[type="email"] {
-      flex: 1 1 auto;
-      min-width: 0;
-      padding: 12px 16px;
-      border: 1px solid var(--brand-green-light);
-      border-radius: 999px;
-      background: var(--bg);
-      font-family: inherit;
-      font-size: 14px;
-      color: var(--brand-green-dark);
-    }
-
-    .restock-notify-form input[type="email"]:focus {
-      outline: none;
-      border-color: var(--brand-green-dark);
-    }
-
-    .restock-notify-form input[type="email"]::placeholder {
-      color: var(--brand-green);
-      opacity: 0.55;
-    }
-
-    .restock-notify-form button {
-      flex: 0 0 auto;
-      padding: 12px 20px;
-      border: 1px solid var(--brand-green-light);
-      border-radius: 999px;
-      background: var(--brand-green-light);
-      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
-      font-size: 14px;
-      letter-spacing: 0.08em;
-      color: var(--bg);
-      cursor: pointer;
-      white-space: nowrap;
-    }
-
-    .restock-notify-form button:hover:not(:disabled) {
-      background: var(--brand-green);
-      border-color: var(--brand-green);
-    }
-
-    .restock-notify-form button:disabled {
-      opacity: 0.6;
-      cursor: wait;
-    }
-
-    .restock-notify-success {
-      margin: 0;
-      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
-      font-size: 14px;
-      letter-spacing: 0.06em;
-      color: var(--brand-green-dark);
-    }
-
-    .restock-notify-error {
-      margin: 8px 0 0;
-      font-size: 13px;
-      color: #9C3E32;
-    }
-
-    @media (max-width: 600px) {
-      .restock-notify-form {
-        flex-direction: column;
-      }
-
-      .restock-notify-form input[type="email"],
-      .restock-notify-form button {
-        width: 100%;
-      }
-    }
-
     .size-chart-desc {
       font-size: 14px;
       color: var(--brand-green-dark);
@@ -1669,6 +1574,160 @@
       .email-popup-form { flex-direction: column; gap: 10px; }
       .email-popup-form input[type="email"],
       .email-popup-form button { width: 100%; flex-basis: auto; }
+    }
+
+    /* RESTOCK MODAL (back in stock signup) */
+    body.restock-modal-open { overflow: hidden; }
+
+    .restock-modal[hidden] { display: none; }
+    .restock-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 220;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+
+    .restock-modal.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .restock-modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 44, 57, 0.38);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    .restock-modal-content {
+      position: relative;
+      width: min(560px, 100%);
+      background: #F4F0E8;
+      border: 1px solid rgba(92, 107, 75, 0.16);
+      border-radius: 18px;
+      box-shadow: 0 20px 56px rgba(0, 44, 57, 0.22);
+      padding: 54px 48px 56px;
+      text-align: center;
+      color: var(--brand-green-dark);
+    }
+
+    .restock-modal-close {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      border: 0;
+      background: transparent;
+      color: var(--brand-green-dark);
+      font-size: 30px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 4px;
+    }
+
+    .restock-modal-close:hover { color: var(--brand-green); }
+
+    .restock-modal-heading {
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 26px;
+      line-height: 1.1;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--brand-green-dark);
+      margin-bottom: 14px;
+    }
+
+    .restock-modal-body {
+      max-width: 400px;
+      margin: 0 auto 30px;
+      color: var(--brand-green-dark);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .restock-modal-form {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      gap: 10px;
+    }
+
+    .restock-modal-form input[type="email"] {
+      flex: 1 1 280px;
+      min-width: 0;
+      padding: 15px 24px;
+      border: 1px solid var(--brand-green-light);
+      border-radius: 999px;
+      background: rgba(237, 232, 224, 0.6);
+      font-family: inherit;
+      font-size: 15px;
+      color: var(--brand-green-dark);
+    }
+
+    .restock-modal-form input[type="email"]:focus {
+      outline: none;
+      background: var(--bg);
+      border-color: var(--brand-green-dark);
+    }
+
+    .restock-modal-form input[type="email"]::placeholder {
+      color: var(--brand-green);
+      opacity: 0.55;
+    }
+
+    .restock-modal-form button {
+      flex: 0 0 auto;
+      padding: 15px 32px;
+      border: 1px solid var(--brand-green-light);
+      border-radius: 999px;
+      background: var(--brand-green-light);
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 15px;
+      letter-spacing: 0.1em;
+      color: var(--bg);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .restock-modal-form button:hover:not(:disabled) {
+      background: var(--brand-green);
+      border-color: var(--brand-green);
+    }
+
+    .restock-modal-form button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
+
+    .restock-modal-success {
+      margin: 0;
+      font-family: "Telugu MN", "Noto Serif Telugu", "Georgia", serif;
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      color: var(--brand-green-dark);
+    }
+
+    .restock-modal-error {
+      margin: 14px 0 0;
+      font-size: 14px;
+      color: #9C3E32;
+    }
+
+    @media (max-width: 600px) {
+      .restock-modal { padding: 18px; align-items: flex-start; padding-top: 96px; }
+      .restock-modal-content { padding: 46px 24px 34px; }
+      .restock-modal-heading { font-size: 21px; }
+      .restock-modal-body { font-size: 14px; margin-bottom: 24px; }
+      .restock-modal-form { flex-direction: column; gap: 10px; }
+      .restock-modal-form input[type="email"],
+      .restock-modal-form button { width: 100%; flex-basis: auto; }
     }
 
     /* NEWSLETTER (homepage section) */
