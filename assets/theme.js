@@ -239,7 +239,10 @@
         });
 
         modalSizes.innerHTML = '';
-        product.sizes.forEach(size => {
+        const modalSizeList = getCardSizeValues(activeCardEl).length
+          ? getCardSizeValues(activeCardEl)
+          : (product.sizes || []);
+        modalSizeList.forEach(size => {
           const b = document.createElement('button');
           b.className = 'size-option';
           b.textContent = size;
@@ -383,18 +386,35 @@
         error.hidden = false;
       }
 
-      function subscribeBackInStock(email, variantId) {
+      function subscribeBackInStockLegacy(email, variantId) {
         const companyId = KLAVIYO.companyId;
-        if (!companyId) {
-          return Promise.reject(new Error(STRINGS.restockNotConfigured || 'Restock alerts are not configured yet.'));
-        }
+        const body = new FormData();
+        body.append('a', companyId);
+        body.append('email', email);
+        body.append('variant', String(variantId));
+        body.append('platform', 'shopify');
+        return fetch('https://a.klaviyo.com/onsite/components/back-in-stock/subscribe', {
+          method: 'POST',
+          body: body
+        }).then(function (res) {
+          if (res.ok) return res.json().catch(function () { return {}; });
+          return res.json().catch(function () { return {}; }).then(function (payload) {
+            const msg = payload && payload.errors && payload.errors[0] && payload.errors[0].detail;
+            throw new Error(msg || STRINGS.restockError || 'Something went wrong. Please try again.');
+          });
+        });
+      }
+
+      function subscribeBackInStockClient(email, variantId) {
+        const companyId = KLAVIYO.companyId;
+        const id = String(variantId);
         return fetch(
           'https://a.klaviyo.com/client/back-in-stock-subscriptions/?company_id=' + encodeURIComponent(companyId),
           {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              revision: '2024-07-15'
+              revision: '2024-06-15'
             },
             body: JSON.stringify({
               data: {
@@ -412,7 +432,7 @@
                   variant: {
                     data: {
                       type: 'catalog-variant',
-                      id: '$shopify:::$default:::' + variantId
+                      id: '$shopify:::$default:::' + id
                     }
                   }
                 }
@@ -420,11 +440,32 @@
             })
           }
         ).then(function (res) {
-          if (res.ok) return res.json();
+          if (res.ok) return res.json().catch(function () { return {}; });
           return res.json().catch(function () { return {}; }).then(function (body) {
-            const msg = body && body.errors && body.errors[0] && body.errors[0].detail;
-            throw new Error(msg || STRINGS.restockError || 'Something went wrong. Please try again.');
+            const err = body && body.errors && body.errors[0];
+            const msg = err && err.detail;
+            const notFound = err && err.code === 'variant_not_found';
+            const error = new Error(
+              notFound
+                ? (STRINGS.restockVariantNotSynced || msg)
+                : (msg || STRINGS.restockError || 'Something went wrong. Please try again.')
+            );
+            error.variantNotFound = notFound;
+            throw error;
           });
+        });
+      }
+
+      function subscribeBackInStock(email, variantId) {
+        const companyId = KLAVIYO.companyId;
+        if (!companyId) {
+          return Promise.reject(new Error(STRINGS.restockNotConfigured || 'Restock alerts are not configured yet.'));
+        }
+        return subscribeBackInStockClient(email, variantId).catch(function (err) {
+          if (err && err.variantNotFound) {
+            return subscribeBackInStockLegacy(email, variantId);
+          }
+          throw err;
         });
       }
 
@@ -435,8 +476,7 @@
           return;
         }
 
-        const variant = size ? findVariant(variants, color, size) : null;
-        const showRestock = !!(size && variant && !isVariantInStock(variant));
+        const showRestock = isSizeSoldOutForColor(variants, color, size);
 
         if (showRestock) {
           const wasHidden = restockEl.hidden;
@@ -469,7 +509,20 @@
 
       function isSizeAvailableForColor(variants, color, size) {
         const v = findVariant(variants, color, size);
+        if (!v) return true;
         return isVariantInStock(v);
+      }
+
+      function isSizeSoldOutForColor(variants, color, size) {
+        const v = findVariant(variants, color, size);
+        return !!(v && !isVariantInStock(v));
+      }
+
+      function getCardSizeValues(card) {
+        if (!card) return [];
+        return Array.from(card.querySelectorAll('[data-card-sizes] .size-option')).map(function (btn) {
+          return (btn.getAttribute('data-value') || btn.textContent || '').trim();
+        }).filter(Boolean);
       }
 
       function setPurchaseButtons(addBtn, buyBtn, soldOut) {
@@ -497,16 +550,19 @@
       function updateSizeAvailability(scope, variants, color) {
         scope.querySelectorAll('.size-option').forEach(btn => {
           const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();
-          const available = isSizeAvailableForColor(variants, color, sizeVal);
-          btn.classList.toggle('is-unavailable', !available);
+          const variant = findVariant(variants, color, sizeVal);
+          const soldOut = !!(variant && !isVariantInStock(variant));
+          btn.classList.toggle('is-unavailable', soldOut);
+          btn.hidden = !variant;
         });
       }
 
       function shouldShowSoldOut(variants, color, size, sizeButtons) {
         if (!hasAnyAvailableVariant(variants)) return true;
-        if (size) return !isSizeAvailableForColor(variants, color, size);
+        if (size) return isSizeSoldOutForColor(variants, color, size);
         if (sizeButtons.length && color) {
           return !Array.from(sizeButtons).some(btn => {
+            if (btn.hidden) return false;
             const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();
             return isSizeAvailableForColor(variants, color, sizeVal);
           });
