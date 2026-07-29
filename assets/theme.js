@@ -348,7 +348,22 @@
         soldOut: 'Sold out'
       };
 
-      const STRINGS = window.praaliStrings || {};
+      /* Liquid's translate filter HTML-escapes quotes, which would show as
+         literal entities once assigned via textContent. */
+      function decodeEntities(value) {
+        return String(value)
+          .replace(/&#39;/g, "'")
+          .replace(/&quot;/g, '"')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&amp;/g, '&');
+      }
+
+      const STRINGS = {};
+      Object.keys(window.praaliStrings || {}).forEach(key => {
+        STRINGS[key] = decodeEntities(window.praaliStrings[key]);
+      });
+
       const KLAVIYO = window.praaliKlaviyo || {};
 
       const restockModal = document.querySelector('[data-restock-modal]');
