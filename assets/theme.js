@@ -74,7 +74,6 @@
             if (imageLabel) {
               imageLabel.textContent = `${product.name.toLowerCase()} — ${color.name.toLowerCase()}`;
             }
-            if (getCardVariants(card)) updateCardAvailability(card);
           });
         });
 
@@ -90,7 +89,6 @@
                 e.stopPropagation();
                 existingButtons.forEach(x => x.classList.remove('is-active'));
                 btn.classList.add('is-active');
-                if (getCardVariants(card)) updateCardAvailability(card);
               });
             });
           } else {
@@ -228,16 +226,11 @@
 
 
         modalSwatches.innerHTML = '';
-        const cardSwatches = activeCardEl ? activeCardEl.querySelectorAll('.color-swatches .swatch') : [];
         product.colors.forEach((c, i) => {
           const b = document.createElement('button');
           b.className = 'swatch';
           b.style.background = c.hex;
-          const shopifyColor = cardSwatches[i]
-            ? (cardSwatches[i].getAttribute('data-value') || c.name)
-            : c.name;
-          b.setAttribute('data-value', shopifyColor);
-          b.setAttribute('aria-label', shopifyColor);
+          b.setAttribute('aria-label', c.name);
           b.addEventListener('click', () => {
             renderColor(product, i);
             updateModalAvailability();
@@ -246,10 +239,7 @@
         });
 
         modalSizes.innerHTML = '';
-        const modalSizeList = getCardSizeValues(activeCardEl).length
-          ? getCardSizeValues(activeCardEl)
-          : (product.sizes || []);
-        modalSizeList.forEach(size => {
+        product.sizes.forEach(size => {
           const b = document.createElement('button');
           b.className = 'size-option';
           b.textContent = size;
@@ -319,11 +309,7 @@
         if (!card) return null;
         const raw = card.getAttribute('data-variants');
         if (!raw) return null;
-        try { return JSON.parse(raw); }
-        catch (e) {
-          console.warn('Could not parse product variant data', e);
-          return null;
-        }
+        try { return JSON.parse(raw); } catch (e) { return null; }
       }
 
       function getActiveValue(scope, selector) {
@@ -339,34 +325,18 @@
         return [v.option1, v.option2, v.option3].filter(Boolean).map(o => String(o).trim());
       }
 
-      function normalizeOption(value) {
-        return String(value || '').trim().toLowerCase();
-      }
-
       function findVariant(variants, color, size) {
         if (!variants || !variants.length) return null;
-        const colorKey = color ? normalizeOption(color) : '';
-        const sizeKey = size ? normalizeOption(size) : '';
         return variants.find(v => {
-          if (v.color != null || v.size != null) {
-            if (colorKey && normalizeOption(v.color) !== colorKey) return false;
-            if (sizeKey && normalizeOption(v.size) !== sizeKey) return false;
-            return true;
-          }
-          const opts = variantOptions(v).map(normalizeOption);
-          if (colorKey && !opts.includes(colorKey)) return false;
-          if (sizeKey && !opts.includes(sizeKey)) return false;
+          const opts = variantOptions(v);
+          if (color && !opts.includes(color)) return false;
+          if (size && !opts.includes(size)) return false;
           return true;
         }) || null;
       }
 
       function getActiveColor(scope) {
-        const el = scope && (
-          scope.querySelector('.swatch.is-active') ||
-          scope.querySelector('.color-swatches .swatch') ||
-          scope.querySelector('.modal-swatches .swatch.is-active') ||
-          scope.querySelector('.modal-swatches .swatch')
-        );
+        const el = scope && (scope.querySelector('.swatch.is-active') || scope.querySelector('.color-swatches .swatch'));
         if (!el) return null;
         return (el.getAttribute('data-value') || el.getAttribute('aria-label') || '').trim();
       }
@@ -523,12 +493,11 @@
 
       function isVariantInStock(v) {
         if (!v) return false;
-        if (v.available === false) return false;
         const qty = Number(v.inventory_quantity);
         if (v.inventory_management === 'shopify' && Number.isFinite(qty)) {
           return qty > 0;
         }
-        return v.available !== false;
+        return !!v.available;
       }
 
       function hasAnyAvailableVariant(variants) {
@@ -543,13 +512,6 @@
       function isSizeSoldOutForColor(variants, color, size) {
         const v = findVariant(variants, color, size);
         return !!(v && !isVariantInStock(v));
-      }
-
-      function getCardSizeValues(card) {
-        if (!card) return [];
-        return Array.from(card.querySelectorAll('[data-card-sizes] .size-option')).map(function (btn) {
-          return (btn.getAttribute('data-value') || btn.textContent || '').trim();
-        }).filter(Boolean);
       }
 
       function setPurchaseButtons(addBtn, buyBtn, soldOut) {
@@ -579,13 +541,12 @@
           const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();
           const available = isSizeAvailableForColor(variants, color, sizeVal);
           btn.classList.toggle('is-unavailable', !available);
-          btn.hidden = false;
         });
       }
 
       function shouldShowSoldOut(variants, color, size, sizeButtons) {
         if (!hasAnyAvailableVariant(variants)) return true;
-        if (size) return isSizeSoldOutForColor(variants, color, size);
+        if (size) return !isSizeAvailableForColor(variants, color, size);
         if (sizeButtons.length && color) {
           return !Array.from(sizeButtons).some(btn => {
             const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();

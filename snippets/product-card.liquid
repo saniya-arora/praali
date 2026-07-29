@@ -5,18 +5,15 @@
 
 {%- assign color_option_name = 'Color' -%}
 {%- assign color_option = product.options_by_name[color_option_name] -%}
-{%- assign size_option = product.options_by_name['Size'] -%}
 {%- assign default_variant = product.selected_or_first_available_variant -%}
-{%- assign color_pos = color_option.position | default: 1 -%}
-{%- assign size_pos = size_option.position | default: 2 -%}
 
 {%- capture card_variants_json -%}
-[{% for variant in product.variants %}{%- if color_pos == 1 -%}{%- assign v_color = variant.option1 -%}{%- elsif color_pos == 2 -%}{%- assign v_color = variant.option2 -%}{%- else -%}{%- assign v_color = variant.option3 -%}{%- endif -%}{%- if size_pos == 1 -%}{%- assign v_size = variant.option1 -%}{%- elsif size_pos == 2 -%}{%- assign v_size = variant.option2 -%}{%- else -%}{%- assign v_size = variant.option3 -%}{%- endif -%}{"id":{{ variant.id }},"color":{{ v_color | json }},"size":{{ v_size | json }},"option1":{{ variant.option1 | json }},"option2":{{ variant.option2 | json }},"option3":{{ variant.option3 | json }},"available":{{ variant.available | json }},"inventory_management":{{ variant.inventory_management | json }},"inventory_quantity":{{ variant.inventory_quantity | json }}}{% unless forloop.last %},{% endunless %}{% endfor %}]
+[{% for variant in product.variants %}{"id":{{ variant.id }},"option1":{{ variant.option1 | json }},"option2":{{ variant.option2 | json }},"option3":{{ variant.option3 | json }},"available":{{ variant.available | json }},"inventory_management":{{ variant.inventory_management | json }},"inventory_quantity":{{ variant.inventory_quantity }}}{% unless forloop.last %},{% endunless %}{% endfor %}]
 {%- endcapture -%}
 
 <article class="product-card"
          data-product="{{ idx }}"
-         data-variants="{{ card_variants_json | strip | escape }}">
+         data-variants='{{ card_variants_json | strip | escape }}'>
   <button class="product-image" data-modal-open="{{ idx }}" aria-label="View {{ product.title }} details">
     {%- if default_variant.featured_image -%}
       <img src="{{ default_variant.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" />
