@@ -13,6 +13,8 @@
 
 <article class="product-card"
          data-product="{{ idx }}"
+         data-product-title="{{ product.title | escape }}"
+         data-product-url="{{ product.url }}"
          data-variants='{{ card_variants_json | strip | escape }}'>
   <button class="product-image" data-modal-open="{{ idx }}" aria-label="View {{ product.title }} details">
     {%- if default_variant.featured_image -%}

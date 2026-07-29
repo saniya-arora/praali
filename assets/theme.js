@@ -388,8 +388,10 @@
       const restockSuccess = restockModal && restockModal.querySelector('[data-restock-success]');
       const restockError = restockModal && restockModal.querySelector('[data-restock-error]');
 
-      /* Variant the shopper asked to be notified about */
-      let restockVariantId = null;
+      const KLAVIYO_REVISION = '2024-06-15';
+
+      /* What the shopper asked to be notified about */
+      let restockRequest = null;
 
       function restockLabelForSize(size) {
         const template = STRINGS.restockLabel || 'Email me when size __SIZE__ is back in stock.';
@@ -417,9 +419,15 @@
         restockError.hidden = false;
       }
 
-      function openRestockModal(variant, size) {
+      function openRestockModal(variant, size, card, color) {
         if (!restockModal) return;
-        restockVariantId = variant.id;
+        restockRequest = {
+          variantId: variant.id,
+          size: size,
+          color: color || null,
+          title: (card && card.getAttribute('data-product-title')) || document.title,
+          url: (card && card.getAttribute('data-product-url')) || window.location.pathname
+        };
         if (restockLabel) restockLabel.textContent = restockLabelForSize(size);
         resetRestockFeedback();
         if (restockEmail) restockEmail.value = '';
@@ -450,7 +458,7 @@
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              revision: '2024-06-15'
+              revision: KLAVIYO_REVISION
             },
             body: JSON.stringify({
               data: {
@@ -481,12 +489,60 @@
             const err = body && body.errors && body.errors[0];
             if (err && err.code === 'variant_not_found') {
               console.warn('Klaviyo has no catalog variant for Shopify variant', id);
-              throw new Error(STRINGS.restockVariantNotSynced || err.detail);
             }
             throw new Error((err && err.detail) || STRINGS.restockError || 'Something went wrong. Please try again.');
           });
         }, function () {
           throw new Error(STRINGS.restockError || 'Something went wrong. Please try again.');
+        });
+      }
+
+      /* Our own record of who wants what. Unlike the subscription endpoint this
+         does not depend on Klaviyo's catalog, so it still captures the signup
+         when the catalog is missing the variant. */
+      function logRestockRequest(email, request) {
+        const companyId = KLAVIYO.companyId;
+        if (!companyId) {
+          return Promise.reject(new Error(STRINGS.restockNotConfigured || 'Restock alerts are not configured yet.'));
+        }
+        return fetch(
+          'https://a.klaviyo.com/client/events/?company_id=' + encodeURIComponent(companyId),
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              revision: KLAVIYO_REVISION
+            },
+            body: JSON.stringify({
+              data: {
+                type: 'event',
+                attributes: {
+                  metric: {
+                    data: {
+                      type: 'metric',
+                      attributes: { name: 'Requested Back In Stock' }
+                    }
+                  },
+                  profile: {
+                    data: {
+                      type: 'profile',
+                      attributes: { email: email }
+                    }
+                  },
+                  properties: {
+                    ProductName: request.title,
+                    Size: request.size,
+                    Color: request.color,
+                    VariantID: String(request.variantId),
+                    ProductURL: window.location.origin + request.url
+                  }
+                }
+              }
+            })
+          }
+        ).then(function (res) {
+          if (res.ok) return true;
+          throw new Error('Klaviyo rejected the restock request event (' + res.status + ')');
         });
       }
 
@@ -518,7 +574,7 @@
         const color = getActiveColor(scope) || getActiveValue(scope, '.modal-swatches .swatch');
         const variant = findVariant(variants, color, size);
         if (!variant || isVariantInStock(variant)) return;
-        openRestockModal(variant, size);
+        openRestockModal(variant, size, card, color);
       }
 
       function setPurchaseButtons(addBtn, buyBtn, soldOut) {
@@ -607,12 +663,26 @@
         restockForm.addEventListener('submit', (e) => {
           e.preventDefault();
           const email = restockEmail && restockEmail.value ? restockEmail.value.trim() : '';
-          if (!email || !restockVariantId) return;
+          if (!email || !restockRequest) return;
 
+          const request = restockRequest;
           if (restockSubmit) restockSubmit.disabled = true;
-          subscribeBackInStock(email, restockVariantId)
-            .then(showRestockSuccess)
-            .catch(err => showRestockError(err && err.message))
+
+          /* The subscription is what triggers Klaviyo's automated back-in-stock
+             email; the event is our fallback record. Treat the signup as saved
+             if either lands so a stale catalog does not turn shoppers away. */
+          Promise.allSettled([
+            subscribeBackInStock(email, request.variantId),
+            logRestockRequest(email, request)
+          ])
+            .then(results => {
+              if (results.some(r => r.status === 'fulfilled')) {
+                showRestockSuccess();
+                return;
+              }
+              const failure = results[0] && results[0].reason;
+              showRestockError(failure && failure.message);
+            })
             .finally(() => {
               if (restockSubmit) restockSubmit.disabled = false;
             });

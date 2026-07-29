@@ -28,9 +28,8 @@
       "restock_email_placeholder": "your@email.com",
       "restock_submit": "Notify me",
       "restock_success": "You’re on the list — we’ll email you when it’s back.",
-      "restock_error": "Something went wrong. Please try again.",
-      "restock_not_configured": "Restock alerts aren’t set up yet.",
-      "restock_variant_not_synced": "This size isn’t synced to our email system yet. Try another size or check back soon."
+      "restock_error": "We couldn’t save your request just now. Please try again in a moment.",
+      "restock_not_configured": "Restock alerts aren’t set up yet."
     }
   },
   "cart": {
