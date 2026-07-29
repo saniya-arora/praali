@@ -92,10 +92,11 @@
               });
             });
           } else {
-            product.sizes.forEach(size => {
+            availableSizeValues(product, card).forEach(size => {
               const b = document.createElement('button');
               b.className = 'size-option';
               b.textContent = size;
+              b.setAttribute('data-value', size);
               b.addEventListener('click', (e) => {
                 e.stopPropagation();
                 cardSizes.querySelectorAll('.size-option').forEach(x => x.classList.remove('is-active'));
@@ -239,7 +240,7 @@
         });
 
         modalSizes.innerHTML = '';
-        product.sizes.forEach(size => {
+        availableSizeValues(product, activeCardEl).forEach(size => {
           const b = document.createElement('button');
           b.className = 'size-option';
           b.textContent = size;
@@ -324,6 +325,19 @@
           return v.options.filter(Boolean).map(o => String(o).trim());
         }
         return [v.option1, v.option2, v.option3].filter(Boolean).map(o => String(o).trim());
+      }
+
+      /* The prototype data lists every size we might ever carry. When a card is
+         backed by real Shopify variants, narrow that list to sizes that actually
+         exist so we never render a button with no variant behind it. */
+      function availableSizeValues(product, card) {
+        const sizes = (product && product.sizes) || [];
+        const variants = getCardVariants(card);
+        if (!variants || !variants.length) return sizes;
+        const optionValues = new Set();
+        variants.forEach(v => variantOptions(v).forEach(o => optionValues.add(o)));
+        const matched = sizes.filter(size => optionValues.has(size));
+        return matched.length ? matched : sizes;
       }
 
       function findVariant(variants, color, size) {
