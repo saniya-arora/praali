@@ -632,9 +632,12 @@
 
       function isVariantInStock(v) {
         if (!v) return false;
-        const qty = Number(v.inventory_quantity);
-        if (v.inventory_management === 'shopify' && Number.isFinite(qty)) {
-          return qty > 0;
+        /* Shopify can report inventory_quantity > 0 while available is false
+           when units are committed to orders. Trust available first. */
+        if (v.available === false) return false;
+        if (v.inventory_management === 'shopify') {
+          const qty = Number(v.inventory_quantity);
+          if (Number.isFinite(qty)) return qty > 0;
         }
         return !!v.available;
       }
