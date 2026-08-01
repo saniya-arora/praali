@@ -992,9 +992,12 @@
     }
 
     .size-option.is-unavailable {
-      opacity: 0.4;
+      opacity: 0.45;
       text-decoration: line-through;
+      text-decoration-thickness: 1px;
       cursor: pointer;
+      border-color: rgba(26, 26, 26, 0.35);
+      color: rgba(26, 26, 26, 0.55);
     }
 
     .size-option.is-unavailable:hover,

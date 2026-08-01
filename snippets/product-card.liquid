@@ -6,6 +6,7 @@
 {%- assign color_option_name = 'Color' -%}
 {%- assign color_option = product.options_by_name[color_option_name] -%}
 {%- assign default_variant = product.selected_or_first_available_variant -%}
+{%- assign active_color = color_option.selected_value | default: color_option.values.first -%}
 
 {%- capture card_variants_json -%}
 [{% for variant in product.variants %}{"id":{{ variant.id }},"option1":{{ variant.option1 | json }},"option2":{{ variant.option2 | json }},"option3":{{ variant.option3 | json }},"available":{{ variant.available | json }},"inventory_management":{{ variant.inventory_management | json }},"inventory_quantity":{{ variant.inventory_quantity | json }}}{% unless forloop.last %},{% endunless %}{% endfor %}]
@@ -14,8 +15,9 @@
 <article class="product-card"
          data-product="{{ idx }}"
          data-product-title="{{ product.title | escape }}"
-         data-product-url="{{ product.url }}"
-         data-variants='{{ card_variants_json | strip | escape }}'>
+         data-product-url="{{ product.url }}">
+  <script type="application/json" data-card-variants>{{ card_variants_json | strip }}</script>
+
   <button class="product-image" data-modal-open="{{ idx }}" aria-label="View {{ product.title }} details">
     {%- if default_variant.featured_image -%}
       <img src="{{ default_variant.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" />
@@ -36,7 +38,7 @@
           {%- when 'sage-green' or 'sage' -%}{% assign hex = '#A9B48B' %}
           {%- else -%}{% assign hex = '#A9B48B' %}
         {%- endcase -%}
-        <button class="swatch{% if value == color_option.selected_value %} is-active{% endif %}"
+        <button class="swatch{% if value == color_option.selected_value %} is-active{% elsif color_option.selected_value == blank and forloop.first %} is-active{% endif %}"
                 data-color="{{ forloop.index0 }}"
                 data-value="{{ value }}"
                 style="background: {{ hex }};"
@@ -54,14 +56,41 @@
       <span class="card-section-label">Size</span>
       <div class="size-options" data-card-sizes>
         {%- for value in size_option.values -%}
-          <button class="size-option" data-value="{{ value }}">{{ value }}</button>
+          {%- assign variant_match = nil -%}
+          {%- for v in product.variants -%}
+            {%- if v.options contains active_color and v.options contains value -%}
+              {%- assign variant_match = v -%}
+              {%- break -%}
+            {%- endif -%}
+          {%- endfor -%}
+          {%- assign size_in_stock = false -%}
+          {%- if variant_match -%}
+            {%- if variant_match.available -%}
+              {%- if variant_match.inventory_management == 'shopify' and variant_match.inventory_quantity <= 0 -%}
+                {%- assign size_in_stock = false -%}
+              {%- else -%}
+                {%- assign size_in_stock = true -%}
+              {%- endif -%}
+            {%- endif -%}
+          {%- endif -%}
+          <button class="size-option{% unless size_in_stock %} is-unavailable{% endunless %}" data-value="{{ value }}">{{ value }}</button>
         {%- endfor -%}
       </div>
     </div>
   {%- endif -%}
 
+  {%- assign any_in_stock = false -%}
+  {%- for v in product.variants -%}
+    {%- if v.available -%}
+      {%- unless v.inventory_management == 'shopify' and v.inventory_quantity <= 0 -%}
+        {%- assign any_in_stock = true -%}
+        {%- break -%}
+      {%- endunless -%}
+    {%- endif -%}
+  {%- endfor -%}
+
   <div class="product-actions">
-    {%- if product.available -%}
+    {%- if any_in_stock -%}
       <button class="btn btn-primary" type="button" data-add-to-cart>{{ 'products.product.add_to_cart' | t }}</button>
       <button class="btn btn-secondary" type="button" data-buy-now>{{ 'products.product.buy_now' | t }}</button>
     {%- else -%}
