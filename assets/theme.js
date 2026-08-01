@@ -92,10 +92,11 @@
               });
             });
           } else {
-            product.sizes.forEach(size => {
+            availableSizeValues(product, card).forEach(size => {
               const b = document.createElement('button');
               b.className = 'size-option';
               b.textContent = size;
+              b.setAttribute('data-value', size);
               b.addEventListener('click', (e) => {
                 e.stopPropagation();
                 cardSizes.querySelectorAll('.size-option').forEach(x => x.classList.remove('is-active'));
@@ -239,7 +240,7 @@
         });
 
         modalSizes.innerHTML = '';
-        product.sizes.forEach(size => {
+        availableSizeValues(product, activeCardEl).forEach(size => {
           const b = document.createElement('button');
           b.className = 'size-option';
           b.textContent = size;
@@ -248,6 +249,7 @@
             modalSizes.querySelectorAll('.size-option').forEach(x => x.classList.remove('is-active'));
             b.classList.add('is-active');
             updateModalAvailability();
+            maybeOpenRestockModal(modal, activeCardEl, '[data-modal-sizes] .size-option');
           });
           modalSizes.appendChild(b);
         });
@@ -325,6 +327,19 @@
         return [v.option1, v.option2, v.option3].filter(Boolean).map(o => String(o).trim());
       }
 
+      /* The prototype data lists every size we might ever carry. When a card is
+         backed by real Shopify variants, narrow that list to sizes that actually
+         exist so we never render a button with no variant behind it. */
+      function availableSizeValues(product, card) {
+        const sizes = (product && product.sizes) || [];
+        const variants = getCardVariants(card);
+        if (!variants || !variants.length) return sizes;
+        const optionValues = new Set();
+        variants.forEach(v => variantOptions(v).forEach(o => optionValues.add(o)));
+        const matched = sizes.filter(size => optionValues.has(size));
+        return matched.length ? matched : sizes;
+      }
+
       function findVariant(variants, color, size) {
         if (!variants || !variants.length) return null;
         return variants.find(v => {
@@ -347,6 +362,274 @@
         soldOut: 'Sold out'
       };
 
+      /* Liquid's translate filter HTML-escapes quotes, which would show as
+         literal entities once assigned via textContent. */
+      function decodeEntities(value) {
+        return String(value)
+          .replace(/&#39;/g, "'")
+          .replace(/&quot;/g, '"')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&amp;/g, '&');
+      }
+
+      const STRINGS = {};
+      Object.keys(window.praaliStrings || {}).forEach(key => {
+        STRINGS[key] = decodeEntities(window.praaliStrings[key]);
+      });
+
+      const KLAVIYO = window.praaliKlaviyo || {};
+
+      const restockModal = document.querySelector('[data-restock-modal]');
+      const restockForm = restockModal && restockModal.querySelector('[data-restock-form]');
+      const restockLabel = restockModal && restockModal.querySelector('[data-restock-label]');
+      const restockEmail = restockModal && restockModal.querySelector('[data-restock-email]');
+      const restockSubmit = restockModal && restockModal.querySelector('[data-restock-submit]');
+      const restockSuccess = restockModal && restockModal.querySelector('[data-restock-success]');
+      const restockError = restockModal && restockModal.querySelector('[data-restock-error]');
+      const restockConsent = restockModal && restockModal.querySelector('.restock-modal-consent');
+
+      const KLAVIYO_REVISION = '2024-06-15';
+
+      /* What the shopper asked to be notified about */
+      let restockRequest = null;
+
+      function restockLabelForSize(size) {
+        const template = STRINGS.restockLabel || 'Email me when size __SIZE__ is back in stock.';
+        return template.replace('__SIZE__', size);
+      }
+
+      function resetRestockFeedback() {
+        if (restockForm) restockForm.hidden = false;
+        if (restockConsent) restockConsent.hidden = false;
+        if (restockSuccess) restockSuccess.hidden = true;
+        if (restockError) {
+          restockError.hidden = true;
+          restockError.textContent = '';
+        }
+      }
+
+      function showRestockSuccess() {
+        if (restockForm) restockForm.hidden = true;
+        if (restockConsent) restockConsent.hidden = true;
+        if (restockError) restockError.hidden = true;
+        if (restockSuccess) restockSuccess.hidden = false;
+      }
+
+      function showRestockError(message) {
+        if (!restockError) return;
+        restockError.textContent = message || STRINGS.restockError || 'Something went wrong. Please try again.';
+        restockError.hidden = false;
+      }
+
+      function openRestockModal(variant, size, card, color) {
+        if (!restockModal) return;
+        restockRequest = {
+          variantId: variant.id,
+          size: size,
+          color: color || null,
+          title: (card && card.getAttribute('data-product-title')) || document.title,
+          url: (card && card.getAttribute('data-product-url')) || window.location.pathname
+        };
+        if (restockLabel) restockLabel.textContent = restockLabelForSize(size);
+        resetRestockFeedback();
+        if (restockEmail) restockEmail.value = '';
+        restockModal.hidden = false;
+        document.body.classList.add('restock-modal-open');
+        requestAnimationFrame(() => {
+          restockModal.classList.add('is-visible');
+          if (restockEmail) restockEmail.focus();
+        });
+      }
+
+      function closeRestockModal() {
+        if (!restockModal) return;
+        restockModal.classList.remove('is-visible');
+        document.body.classList.remove('restock-modal-open');
+        setTimeout(() => { restockModal.hidden = true; }, 220);
+      }
+
+      function subscribeBackInStock(email, variantId) {
+        const companyId = KLAVIYO.companyId;
+        if (!companyId) {
+          return Promise.reject(new Error(STRINGS.restockNotConfigured || 'Restock alerts are not configured yet.'));
+        }
+        const id = String(variantId);
+        return fetch(
+          'https://a.klaviyo.com/client/back-in-stock-subscriptions/?company_id=' + encodeURIComponent(companyId),
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              revision: KLAVIYO_REVISION
+            },
+            body: JSON.stringify({
+              data: {
+                type: 'back-in-stock-subscription',
+                attributes: {
+                  profile: {
+                    data: {
+                      type: 'profile',
+                      attributes: { email: email }
+                    }
+                  },
+                  channels: ['EMAIL']
+                },
+                relationships: {
+                  variant: {
+                    data: {
+                      type: 'catalog-variant',
+                      id: '$shopify:::$default:::' + id
+                    }
+                  }
+                }
+              }
+            })
+          }
+        ).then(function (res) {
+          if (res.ok) return res.json().catch(function () { return {}; });
+          return res.json().catch(function () { return {}; }).then(function (body) {
+            const err = body && body.errors && body.errors[0];
+            if (err && err.code === 'variant_not_found') {
+              console.warn('Klaviyo has no catalog variant for Shopify variant', id);
+            }
+            throw new Error((err && err.detail) || STRINGS.restockError || 'Something went wrong. Please try again.');
+          });
+        }, function () {
+          throw new Error(STRINGS.restockError || 'Something went wrong. Please try again.');
+        });
+      }
+
+      /* Our own record of who wants what. Unlike the subscription endpoint this
+         does not depend on Klaviyo's catalog, so it still captures the signup
+         when the catalog is missing the variant. */
+      function logRestockRequest(email, request) {
+        const companyId = KLAVIYO.companyId;
+        if (!companyId) {
+          return Promise.reject(new Error(STRINGS.restockNotConfigured || 'Restock alerts are not configured yet.'));
+        }
+        return fetch(
+          'https://a.klaviyo.com/client/events/?company_id=' + encodeURIComponent(companyId),
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              revision: KLAVIYO_REVISION
+            },
+            body: JSON.stringify({
+              data: {
+                type: 'event',
+                attributes: {
+                  metric: {
+                    data: {
+                      type: 'metric',
+                      attributes: { name: 'Requested Back In Stock' }
+                    }
+                  },
+                  profile: {
+                    data: {
+                      type: 'profile',
+                      attributes: { email: email }
+                    }
+                  },
+                  properties: {
+                    ProductName: request.title,
+                    Size: request.size,
+                    Color: request.color,
+                    VariantID: String(request.variantId),
+                    ProductURL: window.location.origin + request.url
+                  }
+                }
+              }
+            })
+          }
+        ).then(function (res) {
+          if (res.ok) return true;
+          throw new Error('Klaviyo rejected the restock request event (' + res.status + ')');
+        });
+      }
+
+      function subscribeToWaitlist(email) {
+        const companyId = KLAVIYO.companyId;
+        const listId = KLAVIYO.listId;
+        if (!companyId || !listId) {
+          return Promise.resolve(false);
+        }
+        return fetch(
+          'https://a.klaviyo.com/client/subscriptions/?company_id=' + encodeURIComponent(companyId),
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              revision: KLAVIYO_REVISION
+            },
+            body: JSON.stringify({
+              data: {
+                type: 'subscription',
+                attributes: {
+                  profile: {
+                    data: {
+                      type: 'profile',
+                      attributes: {
+                        email: email,
+                        subscriptions: {
+                          email: {
+                            marketing: { consent: 'SUBSCRIBED' }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                relationships: {
+                  list: {
+                    data: { type: 'list', id: listId }
+                  }
+                }
+              }
+            })
+          }
+        ).then(function (res) {
+          if (res.ok) return true;
+          throw new Error('Klaviyo rejected the waitlist subscription (' + res.status + ')');
+        });
+      }
+
+      function updateRestockProfile(email, request) {
+        const companyId = KLAVIYO.companyId;
+        if (!companyId) {
+          return Promise.resolve(false);
+        }
+        return fetch(
+          'https://a.klaviyo.com/client/profiles/?company_id=' + encodeURIComponent(companyId),
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              revision: KLAVIYO_REVISION
+            },
+            body: JSON.stringify({
+              data: {
+                type: 'profile',
+                attributes: {
+                  email: email,
+                  properties: {
+                    last_bis_product: request.title,
+                    last_bis_size: request.size,
+                    last_bis_color: request.color,
+                    last_bis_variant_id: String(request.variantId),
+                    last_bis_product_url: window.location.origin + request.url
+                  }
+                }
+              }
+            })
+          }
+        ).then(function (res) {
+          if (res.ok) return true;
+          throw new Error('Klaviyo rejected the profile update (' + res.status + ')');
+        });
+      }
+
       function isVariantInStock(v) {
         if (!v) return false;
         const qty = Number(v.inventory_quantity);
@@ -363,6 +646,19 @@
       function isSizeAvailableForColor(variants, color, size) {
         const v = findVariant(variants, color, size);
         return isVariantInStock(v);
+      }
+
+      /* Opens the restock modal when the shopper picks a sold-out size */
+      function maybeOpenRestockModal(scope, card, sizeSelector) {
+        if (!restockModal) return;
+        const variants = getCardVariants(card);
+        if (!variants) return;
+        const size = getActiveValue(scope, sizeSelector);
+        if (!size) return;
+        const color = getActiveColor(scope) || getActiveValue(scope, '.modal-swatches .swatch');
+        const variant = findVariant(variants, color, size);
+        if (!variant || isVariantInStock(variant)) return;
+        openRestockModal(variant, size, card, color);
       }
 
       function setPurchaseButtons(addBtn, buyBtn, soldOut) {
@@ -392,10 +688,6 @@
           const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();
           const available = isSizeAvailableForColor(variants, color, sizeVal);
           btn.classList.toggle('is-unavailable', !available);
-          btn.disabled = !available;
-          if (!available && btn.classList.contains('is-active')) {
-            btn.classList.remove('is-active');
-          }
         });
       }
 
@@ -417,7 +709,6 @@
 
         const addBtn = card.querySelector('[data-add-to-cart]');
         const buyBtn = card.querySelector('[data-buy-now]');
-        if (!addBtn) return;
 
         const color = getActiveColor(card);
         const size = getActiveValue(card, '.size-option');
@@ -442,11 +733,58 @@
         setPurchaseButtons(addBtn, buyBtn, shouldShowSoldOut(variants, color, size, sizeButtons));
       }
 
+      if (restockModal) {
+        restockModal.querySelectorAll('[data-restock-close]').forEach(el => {
+          el.addEventListener('click', closeRestockModal);
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !restockModal.hidden) closeRestockModal();
+        });
+      }
+
+      if (restockForm) {
+        restockForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const email = restockEmail && restockEmail.value ? restockEmail.value.trim() : '';
+          if (!email || !restockRequest) return;
+
+          const request = restockRequest;
+          if (restockSubmit) restockSubmit.disabled = true;
+
+          /* Back-in-stock subscription triggers your Klaviyo flow. List, event,
+             and profile calls add consent, history, and visible product/size. */
+          Promise.allSettled([
+            subscribeBackInStock(email, request.variantId),
+            subscribeToWaitlist(email),
+            logRestockRequest(email, request),
+            updateRestockProfile(email, request)
+          ])
+            .then(results => {
+              if (results.some(r => r.status === 'fulfilled')) {
+                showRestockSuccess();
+                return;
+              }
+              const failure = results.find(r => r.status === 'rejected');
+              showRestockError(failure && failure.reason && failure.reason.message);
+            })
+            .finally(() => {
+              if (restockSubmit) restockSubmit.disabled = false;
+            });
+        });
+      }
+
       document.querySelectorAll('.product-card').forEach(card => {
         if (!getCardVariants(card)) return;
         updateCardAvailability(card);
-        card.querySelectorAll('.swatch, .size-option').forEach(el => {
+        card.querySelectorAll('.swatch').forEach(el => {
           el.addEventListener('click', () => updateCardAvailability(card));
+        });
+        card.querySelectorAll('.size-option').forEach(el => {
+          el.addEventListener('click', () => {
+            updateCardAvailability(card);
+            maybeOpenRestockModal(card, card, '.size-option');
+          });
         });
       });
 
