@@ -248,8 +248,8 @@
           b.addEventListener('click', () => {
             modalSizes.querySelectorAll('.size-option').forEach(x => x.classList.remove('is-active'));
             b.classList.add('is-active');
-            updateModalAvailability();
             maybeOpenRestockModal(modal, activeCardEl, '[data-modal-sizes] .size-option');
+            updateModalAvailability();
           });
           modalSizes.appendChild(b);
         });
@@ -691,6 +691,9 @@
           const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();
           const available = isSizeAvailableForColor(variants, color, sizeVal);
           btn.classList.toggle('is-unavailable', !available);
+          if (!available && btn.classList.contains('is-active')) {
+            btn.classList.remove('is-active');
+          }
         });
       }
 
@@ -785,8 +788,8 @@
         });
         card.querySelectorAll('.size-option').forEach(el => {
           el.addEventListener('click', () => {
-            updateCardAvailability(card);
             maybeOpenRestockModal(card, card, '.size-option');
+            updateCardAvailability(card);
           });
         });
       });
