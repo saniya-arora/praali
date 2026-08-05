@@ -729,11 +729,28 @@
         }
       }
 
+      const SIZE_OPTION_BELL_HTML =
+        '<span class="size-option-bell" aria-hidden="true">' +
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>' +
+        '<path d="M13.73 21a2 2 0 0 1-3.46 0"/>' +
+        '</svg></span>';
+
+      function syncSizeOptionBell(btn, unavailable) {
+        const bell = btn.querySelector('.size-option-bell');
+        if (unavailable) {
+          if (!bell) btn.insertAdjacentHTML('afterbegin', SIZE_OPTION_BELL_HTML);
+        } else if (bell) {
+          bell.remove();
+        }
+      }
+
       function updateSizeAvailability(scope, variants, color) {
         scope.querySelectorAll('.size-option').forEach(btn => {
           const sizeVal = (btn.getAttribute('data-value') || btn.textContent || '').trim();
           const available = isSizeAvailableForColor(variants, color, sizeVal);
           btn.classList.toggle('is-unavailable', !available);
+          syncSizeOptionBell(btn, !available);
           if (!available && btn.classList.contains('is-active')) {
             btn.classList.remove('is-active');
           }
