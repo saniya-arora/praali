@@ -991,22 +991,6 @@
       color: var(--highlight);
     }
 
-    .size-option.is-unavailable {
-      opacity: 0.45;
-      text-decoration: line-through;
-      text-decoration-thickness: 1px;
-      cursor: pointer;
-      border-color: rgba(26, 26, 26, 0.35);
-      color: rgba(26, 26, 26, 0.55);
-    }
-
-    .size-option.is-unavailable:hover,
-    .size-option.is-unavailable.is-active {
-      border-color: var(--brand-green);
-      background: var(--bg);
-      color: var(--brand-green);
-    }
-
     .modal-actions { display: flex; gap: 8px; margin: 24px 0 28px; }
 
     .size-chart-desc {
