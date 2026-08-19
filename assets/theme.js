@@ -383,7 +383,7 @@
       const restockError = restockModal && restockModal.querySelector('[data-restock-error]');
       const restockConsent = restockModal && restockModal.querySelector('.restock-modal-consent');
 
-      const KLAVIYO_REVISION = '2024-06-15';
+      const KLAVIYO_REVISION = '2026-07-15';
 
       /* What the shopper asked to be notified about */
       let restockRequest = null;
@@ -595,7 +595,7 @@
         const companyId = KLAVIYO.companyId;
         const listId = KLAVIYO.listId;
         if (!companyId || !listId) {
-          return Promise.resolve(false);
+          return Promise.reject(new Error(STRINGS.restockNotConfigured || 'Restock alerts are not configured yet.'));
         }
         return fetch(
           'https://a.klaviyo.com/client/subscriptions/?company_id=' + encodeURIComponent(companyId),
@@ -609,6 +609,7 @@
               data: {
                 type: 'subscription',
                 attributes: {
+                  custom_source: 'Praali back-in-stock form',
                   profile: {
                     data: {
                       type: 'profile',
@@ -633,7 +634,11 @@
           }
         ).then(function (res) {
           if (res.ok) return true;
-          throw new Error('Klaviyo rejected the waitlist subscription (' + res.status + ')');
+          return res.json().catch(function () { return {}; }).then(function (body) {
+            const err = body && body.errors && body.errors[0];
+            const detail = err && (err.detail || err.title || err.code);
+            throw new Error(detail || 'Klaviyo rejected the waitlist subscription (' + res.status + ')');
+          });
         });
       }
 
@@ -816,12 +821,15 @@
             updateRestockProfile(email, request)
           ])
             .then(results => {
-              if (results.some(r => r.status === 'fulfilled')) {
+              const requiredResults = results.slice(0, 2);
+              const failure = requiredResults.find(r =>
+                r.status === 'rejected' || (r.status === 'fulfilled' && r.value === false)
+              );
+              if (!failure) {
                 showRestockSuccess();
                 return;
               }
-              const failure = results.find(r => r.status === 'rejected');
-              showRestockError(failure && failure.reason && failure.reason.message);
+              showRestockError(failure.reason && failure.reason.message);
             })
             .finally(() => {
               if (restockSubmit) restockSubmit.disabled = false;
