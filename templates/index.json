@@ -27,7 +27,7 @@
             "placeholder_text": "Email",
             "success_message": "Thank you for joining the waitlist!",
             "container_width": 1200,
-            "section_padding_desktop": 50,
+            "section_padding_desktop": 30,
             "section_padding_mobile": 30,
             "input_max_width": 50,
             "heading_size_desktop": 31,
