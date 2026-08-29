@@ -1,6 +1,415 @@
+{% doc %}
+  @prompt
+    Create a minimal, 100vw section with the container being 1400px width
+    
+    The section should have a soft muted sage-green background with a thin 1px white border around the entire section.
+    
+    Inside the section, create a single horizontal row centered vertically:
+    
+    On the left, display the text “JOIN THE WAITLIST” in uppercase, using a clean modern sans-serif font. The text should be white, lightweight/regular in appearance, with slight letter spacing.
+    On the right, place a large email input field with a white/off-white background, approximately 18–20px rounded corners, and no visible heavy border.
+    The input should contain the placeholder text “Email” in dark black/charcoal, using a clean sans-serif font.
+    The email field should be significantly wider than the text, approximately 45–50% of the section width.
+    Keep both elements on the same horizontal line and vertically centered.
+    Maintain generous horizontal spacing between the heading and email field.
+    The overall design should feel minimal, premium, clean, and fashion/lifestyle-brand inspired.
+    
+    Desktop: Use a horizontal layout with the heading on the left and email field on the right. Keep the section height compact, approximately 100–130px.
+    
+    Mobile: Stack the elements vertically while maintaining comfortable spacing and make the email field nearly full width.
+    
+    Make the section fully responsive and ensure the email field functions as an actual Shopify email/newsletter signup input.
+    
+    Important: Do not add a button, additional text, icons, images, shadows, gradients, or unnecessary elements. Keep the design as close to the reference image as possible., Inherit the fonts from the website itself
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-waitlist-section-{{ ai_gen_id }} {
+    display: block;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    background-color: {{ block.settings.background_color }};
+    border: 1px solid {{ block.settings.border_color }};
+    padding: {{ block.settings.section_padding_desktop }}px 0;
+  }
+
+  .ai-waitlist-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+  }
+
+  .ai-waitlist-heading-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: {{ block.settings.heading_size_desktop }}px;
+    letter-spacing: {{ block.settings.letter_spacing }}px;
+    text-transform: uppercase;
+    margin: 0;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .ai-waitlist-form-wrapper-{{ ai_gen_id }} {
+    flex-grow: 1;
+    max-width: {{ block.settings.input_max_width }}%;
+  }
+
+  .ai-waitlist-input-{{ ai_gen_id }} {
+    width: 100%;
+    padding: {{ block.settings.input_padding_vertical }}px {{ block.settings.input_padding_horizontal }}px;
+    background-color: {{ block.settings.input_background }};
+    color: {{ block.settings.input_text_color }};
+    border: {{ block.settings.input_border_width }}px solid {{ block.settings.input_border_color }};
+    border-radius: {{ block.settings.input_border_radius }}px;
+    font-size: {{ block.settings.input_font_size }}px;
+  }
+
+  .ai-waitlist-input-{{ ai_gen_id }}::placeholder {
+    color: {{ block.settings.placeholder_color }};
+    opacity: 1;
+  }
+
+  .ai-waitlist-input-{{ ai_gen_id }}:focus {
+    outline: 2px solid {{ block.settings.input_focus_color }};
+    outline-offset: 2px;
+  }
+
+  .ai-waitlist-success-{{ ai_gen_id }} {
+    color: {{ block.settings.success_color }};
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  .ai-waitlist-error-{{ ai_gen_id }} {
+    color: {{ block.settings.error_color }};
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-waitlist-section-{{ ai_gen_id }} {
+      padding: {{ block.settings.section_padding_mobile }}px 0;
+    }
+
+    .ai-waitlist-container-{{ ai_gen_id }} {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 20px;
+    }
+
+    .ai-waitlist-heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size_mobile }}px;
+      text-align: center;
+      white-space: normal;
+    }
+
+    .ai-waitlist-form-wrapper-{{ ai_gen_id }} {
+      max-width: 100%;
+    }
+  }
+{% endstyle %}
+
+<waitlist-signup-{{ ai_gen_id }} class="ai-waitlist-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-waitlist-container-{{ ai_gen_id }}">
+    <h2 class="ai-waitlist-heading-{{ ai_gen_id }}">{{ block.settings.heading_text }}</h2>
+    
+    <div class="ai-waitlist-form-wrapper-{{ ai_gen_id }}">
+      {%- form 'customer', class: 'ai-waitlist-form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <input
+          type="email"
+          name="contact[email]"
+          class="ai-waitlist-input-{{ ai_gen_id }}"
+          value="{{ form.email }}"
+          aria-required="true"
+          autocorrect="off"
+          autocapitalize="off"
+          autocomplete="email"
+          {% if form.errors %}
+            aria-invalid="true"
+            aria-describedby="ai-waitlist-error-{{ ai_gen_id }}"
+          {% endif %}
+          {% if form.posted_successfully? %}
+            aria-describedby="ai-waitlist-success-{{ ai_gen_id }}"
+          {% endif %}
+          placeholder="{{ block.settings.placeholder_text }}"
+          required
+        >
+        {%- if form.errors -%}
+          <div id="ai-waitlist-error-{{ ai_gen_id }}" class="ai-waitlist-error-{{ ai_gen_id }}">
+            <span>{{ form.errors.messages.email }}</span>
+          </div>
+        {%- endif -%}
+        {%- if form.posted_successfully? -%}
+          <div id="ai-waitlist-success-{{ ai_gen_id }}" class="ai-waitlist-success-{{ ai_gen_id }}">
+            <span>{{ block.settings.success_message }}</span>
+          </div>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+</waitlist-signup-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class WaitlistSignup{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.form = this.querySelector('form');
+        this.input = this.querySelector('input[type="email"]');
+        
+        this.input.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            this.form.submit();
+          }
+        });
+      }
+    }
+
+    customElements.define('waitlist-signup-{{ ai_gen_id }}', WaitlistSignup{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Waitlist signup",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading_text",
+      "label": "Heading",
+      "default": "JOIN THE WAITLIST"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Placeholder",
+      "default": "Email"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thank you for joining the waitlist!"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container width",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "section_padding_desktop",
+      "label": "Section padding (desktop)",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "section_padding_mobile",
+      "label": "Section padding (mobile)",
+      "min": 15,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "input_max_width",
+      "label": "Input max width",
+      "min": 30,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Heading style"
+    },
+    {
+      "type": "range",
+      "id": "heading_size_desktop",
+      "label": "Font size (desktop)",
+      "min": 12,
+      "max": 36,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "heading_size_mobile",
+      "label": "Font size (mobile)",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Letter spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "default": 1.5
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Input style"
+    },
+    {
+      "type": "range",
+      "id": "input_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "input_padding_vertical",
+      "label": "Padding (vertical)",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "input_padding_horizontal",
+      "label": "Padding (horizontal)",
+      "min": 12,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "input_font_size",
+      "label": "Font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "input_border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 3,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "input_background",
+      "label": "Background",
+      "default": "#F5F5F0"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Text color",
+      "default": "#2C2C2C"
+    },
+    {
+      "type": "color",
+      "id": "placeholder_color",
+      "label": "Placeholder color",
+      "default": "#2C2C2C"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Border color",
+      "default": "#E0E0E0"
+    },
+    {
+      "type": "color",
+      "id": "input_focus_color",
+      "label": "Focus outline",
+      "default": "#5C6B4B"
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#A8B89E"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "success_color",
+      "label": "Success message color",
+      "default": "#5C6B4B"
+    },
+    {
+      "type": "color",
+      "id": "error_color",
+      "label": "Error message color",
+      "default": "#D82C0D"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Waitlist signup"
+    }
+  ]
+}
 {% endschema %}
